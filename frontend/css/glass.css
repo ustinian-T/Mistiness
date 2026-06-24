@@ -1,0 +1,267 @@
+/* Web liquid-glass approximation (not Apple official) */
+.liquid-glass {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  backdrop-filter: blur(24px) saturate(185%) contrast(1.04);
+  -webkit-backdrop-filter: blur(24px) saturate(185%) contrast(1.04);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.3)),
+    linear-gradient(160deg, rgba(219, 234, 254, 0.42), rgba(255, 228, 230, 0.2));
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.25),
+    var(--shadow);
+}
+
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.78), transparent 36%),
+    radial-gradient(circle at 86% 12%, rgba(254, 243, 199, 0.24), transparent 32%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.35), transparent 45%, rgba(147, 197, 253, 0.2));
+}
+
+.liquid-glass-strong {
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(191, 219, 254, 0.42));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass,
+  .liquid-glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.96);
+  }
+}
+
+.glass-card {
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.35rem;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.glass-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+}
+
+.glass-chip:hover,
+.glass-chip.active {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--blue-700);
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.btn-ghost,
+.nav-btn,
+.glass-chip,
+.month-tile,
+.audio-btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.68rem 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-400) 58%, var(--petal-400));
+  box-shadow: 0 10px 26px rgba(37, 99, 235, 0.28);
+  transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), opacity 0.22s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-ghost {
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 1.25rem;
+  font-weight: 600;
+  color: var(--blue-700);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.22s var(--ease-out);
+}
+
+.btn-ghost:hover {
+  background: rgba(219, 234, 254, 0.8);
+}
+
+.btn-primary:disabled,
+.btn-ghost:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  transform: none;
+  box-shadow: none;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+.month-tile:focus-visible {
+  outline: 3px solid rgba(96, 165, 250, 0.42);
+  outline-offset: 3px;
+}
+
+.field {
+  width: 100%;
+  border: 1px solid rgba(147, 197, 253, 0.65);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink);
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.field:focus {
+  border-color: var(--blue-400);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+.poem-glass {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.85;
+  padding: 1.1rem 1.25rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-left: 4px solid var(--blue-400);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(219, 234, 254, 0.45));
+}
+
+.script-glass {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.8;
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--radius-md);
+  color: #e0f2fe;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.88), rgba(37, 99, 235, 0.78));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.podcast-text {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.85;
+  padding: 1.25rem 1.4rem;
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  white-space: pre-wrap;
+  margin-bottom: 1rem;
+}
+
+.audio-player {
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+}
+
+.audio-progress {
+  height: 7px;
+  background: rgba(147, 197, 253, 0.4);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.audio-progress-bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.audio-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(59, 130, 246, 0.18);
+  color: var(--blue-600);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-btn:hover {
+  background: rgba(59, 130, 246, 0.28);
+  transform: scale(1.05);
+}
+
+.audio-time {
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  min-width: 100px;
+  text-align: center;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #f8fafc;
+  font-size: 0.88rem;
+  opacity: 0;
+  transition: transform 0.35s var(--ease-out), opacity 0.35s ease;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>花月诗境 · 十二花神诗词智能导览</title>
+  <meta name="description" content="十二花神诗词智能导览系统" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/glass.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/motion.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="top-nav liquid-glass">
+    <div class="brand" aria-label="花月诗境标志">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="logo-orbit"></span>
+        <span class="logo-moon"></span>
+        <span class="logo-flower">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <span class="logo-stem"></span>
+      </span>
+      <div class="brand-copy">
+        <p class="brand-kicker">AI 诗词导览</p>
+        <p class="brand-title">花月诗境</p>
+        <p class="brand-sub">十二花神诗词智能导览</p>
+      </div>
+    </div>
+    <nav class="nav-links" id="navLinks">
+      <button class="nav-btn active" data-page="home">导览首页</button>
+      <button class="nav-btn" data-page="month">按月查询</button>
+      <button class="nav-btn" data-page="keyword">关键词推荐</button>
+      <button class="nav-btn" data-page="dynasty">朝代统计</button>
+      <button class="nav-btn" data-page="broadcast">播客生成</button>
+    </nav>
+  </header>
+
+  <main class="page-shell" id="app">
+    <div class="loading liquid-glass reveal">
+      <div class="spinner"></div>
+      <p>正在载入花神诗境...</p>
+    </div>
+  </main>
+
+  <footer class="site-footer liquid-glass">
+    <p>花月诗境 · 刘思冉 · 2026</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="一键回到顶部">↑</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

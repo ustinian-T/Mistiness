@@ -1,0 +1,9 @@
+{
+  "name": "huayue-shijing",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "postinstall": "npm --prefix backend install"
+  }
+}
