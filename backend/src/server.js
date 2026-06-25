@@ -3,14 +3,24 @@ const cors = require("cors");
 const path = require("path");
 const https = require("https");
 const { FlowerService } = require("./flowerService");
-const { hasLLMKey, generatePodcastScript, generatePodcastScriptStream, generatePoems, aiKeywordMatch, normalizeDialogueScript } = require("./aiService");
+const {
+  hasLLMKey,
+  generatePodcastScript,
+  generatePodcastScriptStream,
+  generateDialoguePodcast,
+  generateDialoguePodcastStream,
+  generatePoems,
+  aiKeywordMatch,
+  normalizeDialogueScript,
+  DASHSCOPE_API_KEY,
+  DEFAULT_MODEL,
+} = require("./aiService");
 
 const PORT = process.env.PORT || 8080;
 const ROOT = path.resolve(__dirname, "../..");
 const CSV_PATH = path.join(ROOT, "flower_poetry_data.csv");
 const RECORD_PATH = path.join(ROOT, "record.txt");
 const FRONTEND_DIR = path.join(ROOT, "frontend");
-const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY || "sk-ws-H.RPXIHML.dupt.MEUCIQDwWUgU4RAp8PugAe1_HqUCWHuB85iblWNuwOkbjzQjJAIgPPYRooo8HxyAVUnwE0NY0FKCgr0NGazjLc9O8GhlLqw";
 const MONTH_NAMES = ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
 
 const app = express();
@@ -296,12 +306,103 @@ app.get("/api/podcast/:month/stream", async (req, res) => {
   res.end();
 });
 
-function requestTTS(text, voice) {
+app.get("/api/podcast-dialog/:month", async (req, res) => {
+  const month = Number(req.params.month);
+  const data = flowerService.findByMonth(month);
+  if (!data) return res.status(400).json({ error: "无效月份" });
+
+  let text = buildPodcast(data);
+  let source = "local";
+  let paragraphs = parseDialogueParagraphs(text);
+
+  if (hasLLMKey()) {
+    try {
+      const aiText = await generateDialoguePodcast(data);
+      if (aiText && aiText.length > 200) {
+        text = aiText;
+        source = "ai";
+        paragraphs = parseDialogueParagraphs(text);
+      }
+    } catch (e) {
+      console.log("AI dialogue podcast generation failed:", e.message);
+    }
+  }
+
+  res.json({
+    month,
+    flower: data.flower,
+    godName: data.godName,
+    dynasty: data.dynasty,
+    text,
+    paragraphs,
+    length: text.length,
+    source,
+    model: DEFAULT_MODEL,
+  });
+});
+
+app.get("/api/podcast-dialog/:month/stream", async (req, res) => {
+  const month = Number(req.params.month);
+  const data = flowerService.findByMonth(month);
+  if (!data) return res.status(400).json({ error: "无效月份" });
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  const sendChunk = (chunk, full) => {
+    const normalized = normalizeDialogueScript(full);
+    const paragraphs = parseDialogueParagraphs(normalized);
+    res.write(`data: ${JSON.stringify({ chunk, full: normalized, paragraphs, text: normalized })}\n\n`);
+  };
+
+  if (!hasLLMKey()) {
+    const text = buildPodcast(data);
+    const normalized = normalizeDialogueScript(text);
+    const paragraphs = parseDialogueParagraphs(normalized);
+    res.write(`data: ${JSON.stringify({ done: true, full: normalized, text: normalized, paragraphs, length: normalized.length, source: "local" })}\n\n`);
+    res.end();
+    return;
+  }
+
+  try {
+    const text = await generateDialoguePodcastStream(data, sendChunk);
+    const normalized = normalizeDialogueScript(text);
+    const paragraphs = parseDialogueParagraphs(normalized);
+    res.write(`data: ${JSON.stringify({ done: true, full: normalized, text: normalized, paragraphs, length: normalized.length, source: "ai", model: DEFAULT_MODEL })}\n\n`);
+  } catch (e) {
+    console.log("AI dialogue podcast stream failed:", e.message);
+    const text = buildPodcast(data);
+    const normalized = normalizeDialogueScript(text);
+    const paragraphs = parseDialogueParagraphs(normalized);
+    res.write(`data: ${JSON.stringify({ done: true, full: normalized, text: normalized, paragraphs, length: normalized.length, source: "local" })}\n\n`);
+  }
+
+  res.end();
+});
+
+const TTS_MODELS = [
+  { model: "cosyvoice-v3-flash", endpoint: "/api/v1/services/audio/tts/SpeechSynthesizer" },
+  { model: "qwen3-tts-flash", endpoint: "/api/v1/services/audio/tts/SpeechSynthesizer" },
+];
+
+const TTS_VOICES = {
+  cosyvoice: { male: "longanyang", female: "longanhuan" },
+  qwen: { male: "Cherry", female: "Cherry" },
+};
+
+async function requestTTS(text, voice, modelIndex = 0) {
   const cleanText = String(text || "").replace(/\s+/g, " ").trim().slice(0, 800);
   if (!cleanText) return Promise.resolve(null);
 
+  const config = TTS_MODELS[modelIndex];
+  if (!config) {
+    throw new Error("所有TTS模型均已尝试，无法合成语音");
+  }
+
   const postData = JSON.stringify({
-    model: "cosyvoice-v3-flash",
+    model: config.model,
     input: {
       text: cleanText,
       voice,
@@ -312,7 +413,7 @@ function requestTTS(text, voice) {
 
   const options = {
     hostname: "dashscope.aliyuncs.com",
-    path: "/api/v1/services/audio/tts/SpeechSynthesizer",
+    path: config.endpoint,
     method: "POST",
     headers: {
       Authorization: `Bearer ${DASHSCOPE_API_KEY}`,
@@ -330,8 +431,12 @@ function requestTTS(text, voice) {
       apiRes.on("end", () => {
         try {
           const result = JSON.parse(responseData);
+          console.log(`TTS ${config.model} Response:`, JSON.stringify(result).slice(0, 300));
           if (result.output?.audio?.url) {
             resolve(result.output.audio.url);
+          } else if (result.code && modelIndex < TTS_MODELS.length - 1) {
+            console.log(`TTS ${config.model} failed with code ${result.code}, trying next model`);
+            requestTTS(text, TTS_VOICES.qwen.male, modelIndex + 1).then(resolve, reject);
           } else {
             reject(new Error(result.message || result.code || "TTS合成失败"));
           }
@@ -340,7 +445,14 @@ function requestTTS(text, voice) {
         }
       });
     });
-    request.on("error", reject);
+    request.on("error", (e) => {
+      if (modelIndex < TTS_MODELS.length - 1) {
+        console.log(`TTS ${config.model} network error: ${e.message}, trying next model`);
+        requestTTS(text, TTS_VOICES.qwen.male, modelIndex + 1).then(resolve, reject);
+      } else {
+        reject(e);
+      }
+    });
     request.write(postData);
     request.end();
   });
@@ -442,63 +554,24 @@ app.post("/api/tts-dialog", async (req, res) => {
     return res.status(503).json({ success: false, error: "未配置 DASHSCOPE_API_KEY" });
   }
 
-  const maleVoice = "longyuan";
-  const femaleVoice = "longxiaochun";
+  const maleVoice = TTS_VOICES.cosyvoice.male;
+  const femaleVoice = TTS_VOICES.cosyvoice.female;
   
   const audioUrls = [];
   
   for (const para of normalizedParagraphs.slice(0, 18)) {
     const voice = para.speaker === "male" ? maleVoice : femaleVoice;
-    const text = para.text.slice(0, 500);
+    const paraText = para.text.slice(0, 500);
     
-    const postData = JSON.stringify({
-      model: "cosyvoice-v3-flash",
-      input: {
-        text,
-        voice,
-        format: "mp3",
-        sample_rate: 24000,
-      },
-    });
-
-    const options = {
-      hostname: "dashscope.aliyuncs.com",
-      path: "/api/v1/services/audio/tts/SpeechSynthesizer",
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${DASHSCOPE_API_KEY}`,
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(postData),
-      },
-    };
-
     try {
-      const audioUrl = await new Promise((resolve, reject) => {
-        let responseData = "";
-        const request = https.request(options, (apiRes) => {
-          apiRes.on("data", (chunk) => { responseData += chunk; });
-          apiRes.on("end", () => {
-            try {
-              const result = JSON.parse(responseData);
-              if (result.output?.audio?.url) {
-                resolve(result.output.audio.url);
-              } else {
-                reject(new Error(result.message || "TTS失败"));
-              }
-            } catch {
-              reject(new Error("TTS响应解析失败"));
-            }
-          });
-        });
-        request.on("error", reject);
-        request.write(postData);
-        request.end();
-      });
+      const audioUrl = await requestTTS(paraText, voice, 0);
       audioUrls.push({ speaker: para.speaker, url: audioUrl, text: para.text });
     } catch (e) {
       console.log("TTS Dialog Error:", e.message);
       audioUrls.push({ speaker: para.speaker, url: null, error: e.message, text: para.text });
     }
+    
+    await new Promise((resolve) => setTimeout(resolve, 200));
   }
 
   const successCount = audioUrls.filter((item) => item.url).length;

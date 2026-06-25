@@ -24,8 +24,11 @@ const api = {
   saveRecord: (payload) =>
     request("/api/records", { method: "POST", body: JSON.stringify(payload) }),
   getPodcast: (month) => request(`/api/podcast/${month}`),
+  getPodcastDialogue: (month) => request(`/api/podcast-dialog/${month}`),
   generateTTS: (text, voice) =>
     request("/api/tts", { method: "POST", body: JSON.stringify({ text, voice }) }),
+  generateTTSDialogue: (paragraphs, text) =>
+    request("/api/tts-dialog", { method: "POST", body: JSON.stringify({ paragraphs, text }) }),
 };
 
 window.api = api;
