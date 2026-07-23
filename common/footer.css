@@ -1,0 +1,27 @@
+/* 通用页脚样式 - 可在任何页面的 <style> 标签中 @import 引用 */
+
+.page-footer {
+  padding: 48rpx 28rpx 20rpx;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.footer-text {
+  font-size: 22rpx;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.footer-icp {
+  font-size: 22rpx;
+  color: #2563eb;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.footer-copy {
+  font-size: 20rpx;
+  color: #94a3b8;
+  text-align: center;
+}
