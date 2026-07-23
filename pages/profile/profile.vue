@@ -477,4 +477,4 @@ onShow(() => {
 .version-text { font-size: 20rpx; color: #94a3b8; }
 .icp-row { margin-top: 12rpx; align-items: center; }
 .icp-link { font-size: 20rpx; color: #2563eb; text-decoration: underline; }
-</style>
+.page-bg{background:#f3f7f5}.page-wrap{width:calc(100% - 48px);max-width:980px;margin:0 auto;padding:32px 0}.user-header,.guest-header{background:linear-gradient(135deg,#183f34,#315e51);border-radius:24px}.section-card{border:1px solid #fff;border-radius:20px;box-shadow:0 18px 50px rgba(35,71,60,.07)}.section-title{color:#183f34;font-family:'STKaiti','KaiTi',serif;font-size:32rpx}.field-input{background:#f7faf8;border-color:#d7e3de;color:#183f34}.btn-primary-sm,.copy-all-btn{background:#183f34}.btn-secondary{border-color:#52786d}.btn-secondary-text,.refresh-text{color:#426b5f}.stat-num{color:#315e51}.site-footer{width:100%}@media(max-width:600px){.page-wrap{width:calc(100% - 28px);padding-top:14px}.user-header,.guest-header{border-radius:20px}}</style>

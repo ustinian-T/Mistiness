@@ -12,8 +12,8 @@
           </view>
           <view class="hero-metrics">
             <view class="metric"><text class="metric-value">12</text><text class="metric-label">月令花神</text></view><view class="metric-line"></view>
-            <view class="metric"><text class="metric-value">38</text><text class="metric-label">文化意象</text></view><view class="metric-line"></view>
-            <view class="metric"><text class="metric-value">8</text><text class="metric-label">历史时期</text></view>
+            <view class="metric"><text class="metric-value">{{ keywordCount }}</text><text class="metric-label">文化意象</text></view><view class="metric-line"></view>
+            <view class="metric"><text class="metric-value">{{ dynastyCount }}</text><text class="metric-label">历史时期</text></view>
           </view>
         </view>
         <view class="hero-gallery" @click="goMonth(featured.month)">
@@ -63,8 +63,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AppFooter from '../../components/app-footer.vue'
-import { FLOWERS, getFlowerImage, type FlowerItem } from '../../utils/flowerData'
+import { FLOWERS, ALL_KEYWORDS, getFlowerImage, type FlowerItem } from '../../utils/flowerData'
 const flowers = ref<FlowerItem[]>(FLOWERS)
+const keywordCount = ALL_KEYWORDS.length
+const dynastyCount = new Set(FLOWERS.map(item => item.dynasty)).size
 const featured = computed(() => FLOWERS[new Date().getMonth()] || FLOWERS[0])
 const features = [
   { no:'01',title:'按月导览',desc:'花卉、花神画像、诗句与文化意象的完整叙事。',path:'/pages/month/month' },

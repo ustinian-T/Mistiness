@@ -387,4 +387,4 @@ onLoad(() => {
   color: #0c4a6e;
   line-height: 1.8;
 }
-</style>
+.page-bg{background:#f3f7f5}.auth-wrap{width:calc(100% - 40px);max-width:560px;margin:0 auto;padding:52px 0 64px}.brand-icon{display:none}.brand-title{color:#183f34;font-family:'STKaiti','KaiTi',serif;font-weight:500}.brand-sub{color:#71857e}.tab-row{background:#e7efeb}.tab-active{box-shadow:0 6px 18px rgba(35,71,60,.08)}.tab-text{color:#527269!important}.tab-active .tab-text{color:#183f34!important}.form-card,.notes-card{border:1px solid #fff;box-shadow:0 20px 55px rgba(35,71,60,.08)}.field-input{background:#f7faf8;border-color:#d7e3de;color:#183f34}.submit-btn{background:#183f34!important}.guest-link-text{color:#426b5f}.site-footer{width:100%}@media(max-width:600px){.auth-wrap{width:calc(100% - 28px);padding-top:34px}.brand-title{font-size:46rpx}}</style>

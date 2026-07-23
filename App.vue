@@ -8,12 +8,12 @@ export default {
 
 <style>
 page {
-  background-color: #eef6fd;
+  background-color: #f3f7f5;
   min-height: 100vh;
 }
 
 body {
-  background-color: #eef6fd;
+  background-color: #f3f7f5;
 }
 
 .uni-row {

@@ -522,4 +522,17 @@ onShow(() => {
   line-height: 1.7;
 }
 .flower-info-image { width: 150rpx; height: 150rpx; border-radius: 22rpx; flex-shrink: 0; }
-</style>
+.page-bg { background: #f3f7f5; }
+.hero-card { max-width: 1064px; width: calc(100% - 48px); margin: 32px auto 0; padding: 42px 48px; border-radius: 28px; background: linear-gradient(135deg,#183f34,#315e51); box-sizing: border-box; }
+.hero-title { font-family: 'STKaiti','KaiTi',serif; font-size: 42px; letter-spacing: 4px; }
+.hero-desc { font-size: 14px; }
+.section-header,.month-scroll-wrap,.flower-info-card,.gen-wrap,.error-card,.result-card,.empty-hint,.site-footer { max-width: 1064px; width: calc(100% - 48px); margin-left: auto; margin-right: auto; box-sizing: border-box; }
+.month-scroll-wrap { padding-left: 0; }
+.month-tab { background: rgba(255,255,255,.86) !important; border-color: #d7e3de !important; }
+.month-tab-flower { color: #234c40 !important; }
+.month-tab-num { color: #83978f !important; }
+.flower-info-card,.result-card { border: 1px solid #fff; box-shadow: 0 20px 55px rgba(35,71,60,.08); }
+.flower-info-name,.section-title { color: #183f34; font-family: 'STKaiti','KaiTi',serif; }
+.gen-btn { background: #183f34 !important; }
+.key-tip-text,.copy-btn-text { color: #426b5f; }
+@media(max-width:600px){.hero-card,.section-header,.month-scroll-wrap,.flower-info-card,.gen-wrap,.error-card,.result-card,.empty-hint,.site-footer{width:calc(100% - 28px)}.hero-card{padding:30px 26px}.hero-title{font-size:34px}.flower-info-image{width:120rpx;height:120rpx}}</style>
