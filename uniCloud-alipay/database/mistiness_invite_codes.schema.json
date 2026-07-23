@@ -1,0 +1,41 @@
+{
+  "bsonType": "object",
+  "required": ["code", "created_by", "created_at", "is_used"],
+  "permission": {
+    "read": "'admin' == auth.role",
+    "write": "'admin' == auth.role",
+    "create": "'admin' == auth.role",
+    "delete": "'admin' == auth.role"
+  },
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "code": {
+      "bsonType": "string",
+      "minLength": 6,
+      "maxLength": 32,
+      "description": "邀请码，唯一"
+    },
+    "created_by": {
+      "bsonType": "string",
+      "description": "创建者用户名"
+    },
+    "created_at": { "bsonType": "timestamp" },
+    "is_used": {
+      "bsonType": "bool",
+      "defaultValue": false
+    },
+    "used_by": {
+      "bsonType": "string",
+      "description": "使用该邀请码注册的用户名"
+    },
+    "used_at": { "bsonType": "timestamp" },
+    "note": {
+      "bsonType": "string",
+      "description": "备注"
+    },
+    "expires_at": {
+      "bsonType": "timestamp",
+      "description": "过期时间，null 表示永不过期"
+    }
+  }
+}

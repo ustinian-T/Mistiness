@@ -1,0 +1,47 @@
+{
+  "bsonType": "object",
+  "required": ["username", "password_hash", "role", "created_at"],
+  "permission": {
+    "read": "doc._id == auth.uid || 'admin' == auth.role",
+    "write": "doc._id == auth.uid || 'admin' == auth.role",
+    "create": false,
+    "delete": "'admin' == auth.role"
+  },
+  "properties": {
+    "_id": { "bsonType": "string" },
+    "username": {
+      "bsonType": "string",
+      "minLength": 3,
+      "maxLength": 32,
+      "description": "用户名，唯一"
+    },
+    "password_hash": {
+      "bsonType": "string",
+      "description": "bcrypt 哈希，永不返回给客户端"
+    },
+    "role": {
+      "bsonType": "string",
+      "enum": ["admin", "user"],
+      "defaultValue": "user"
+    },
+    "invite_code_used": {
+      "bsonType": "string",
+      "description": "注册时使用的邀请码，未注册用户为空"
+    },
+    "api_key_encrypted": {
+      "bsonType": "string",
+      "description": "用户自填的 AI API Key（AES 加密后存储）"
+    },
+    "api_base_url": {
+      "bsonType": "string",
+      "description": "用户自定义 API Base URL，可选"
+    },
+    "use_own_key": {
+      "bsonType": "bool",
+      "defaultValue": false,
+      "description": "是否使用自己的 API Key"
+    },
+    "created_at": { "bsonType": "timestamp" },
+    "last_login_at": { "bsonType": "timestamp" }
+  }
+}

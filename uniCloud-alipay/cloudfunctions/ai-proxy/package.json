@@ -1,0 +1,5 @@
+{
+  "name": "ai-proxy",
+  "version": "1.0.0",
+  "description": "代理 AI 请求，优先使用服务端 Key，次选用户自填 Key"
+}

@@ -1,13 +1,29 @@
 node_modules/
-record.txt
-.env
-.env.local
-.env.*
-!.env.example
-*.key
-*.pem
-*.log
+unpackage/
+.hbuilderx/
 .DS_Store
-Thumbs.db
 __pycache__/
 *.pyc
+*.log
+.env
+.env.local
+*.tmp
+*.bak
+
+# 敏感信息（永不提交）
+uniCloud-alipay/cloudfunctions/**/.env
+uniCloud-alipay/cloudfunctions/**/node_modules/
+
+# Python 后端（已迁移到 uniCloud，可选保留）
+backend/
+十二花神图片/
+十二种花图片/
+
+# 旧版前端（已迁移到 uni-app x）
+frontend/
+
+# 文档草稿（保留主 README）
+《*.md
+
+# 临时文件
+start.bat
