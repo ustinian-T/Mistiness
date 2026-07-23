@@ -104,6 +104,7 @@
         <text class="notes-item">• 也可不注册，直接在「个人」页填写 API Key 使用</text>
       </view>
 
+      <AppFooter />
     </view>
   </scroll-view>
 </template>
@@ -111,6 +112,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import AppFooter from '../../components/app-footer.vue'
 import { saveAuth, getToken, callUserAuth, type UserInfo } from '../../utils/auth'
 
 const mode = ref<string>('login')

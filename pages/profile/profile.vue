@@ -169,17 +169,12 @@
 
       <!-- About -->
       <view class="section-card">
-        <text class="section-title">关于</text>
-        <text class="about-text">花月诗境 · 十二月令花神诗词导览</text>
-        <text class="version-text">v1.0.0 · 传承中华诗词文化之美</text>
-        <text class="version-text" style="margin-top:8rpx">作者：谭书宏，刘思冉</text>
-        <view class="icp-row">
-          <text class="icp-link" @click="openICP">湘ICP备2026021754号-2</text>
-        </view>
-        <text class="version-text">www.mistiness.tshai.top</text>
+        <text class="section-title">关于项目</text>
+        <text class="about-text">花月诗境 · 十二月令花神诗词智能导览系统</text>
+        <text class="version-text">v1.0.0 · 以数字技术传承中华诗词文化之美</text>
       </view>
 
-      <view style="height:60rpx"></view>
+      <AppFooter />
     </view>
   </scroll-view>
 </template>
@@ -187,6 +182,7 @@
 <script setup lang="ts">
 import { onLoad, onShow } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
+import AppFooter from '../../components/app-footer.vue'
 import {
   isLoggedIn, getLocalUserInfo, clearAuth, getToken,
   callUserAuth, callAiProxy, callInviteCode, saveAuth, type UserInfo

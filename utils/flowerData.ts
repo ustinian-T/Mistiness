@@ -51,6 +51,14 @@ export const KEYWORD_MAP : Record<string, string[]> = {
   '空灵': ['水仙'],
 }
 
+export function getFlowerImage(month : number) : string {
+  return `/static/images/flowers/${String(month).padStart(2, '0')}.jpg`
+}
+
+export function getGodImage(month : number) : string {
+  return `/static/images/gods/${String(month).padStart(2, '0')}.jpg`
+}
+
 export const FLOWERS : FlowerItem[] = [
   {
     month: 1,

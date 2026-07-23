@@ -1,339 +1,52 @@
 <template>
-  <scroll-view class="page-bg" scroll-y>
-
-    <!-- Hero -->
-    <view class="hero-card">
-      <text class="hero-title">意象匹配</text>
-      <text class="hero-desc">输入关键词，发现对应的月令花卉</text>
-    </view>
-
-    <!-- Keyword chips -->
-    <view class="section-header">
-      <text class="section-title">常用意象词</text>
-    </view>
-    <view class="chips-wrap">
-      <view
-        v-for="kw in allKeywords"
-        :key="kw"
-        class="chip"
-        :class="inputVal === kw ? 'chip-active' : ''"
-        @click="selectChip(kw)"
-      >
-        <text class="chip-text" :style="inputVal === kw ? 'color:#fff' : 'color:#2563eb'">{{ kw }}</text>
-      </view>
-    </view>
-
-    <!-- Input -->
-    <view class="input-wrap">
-      <input
-        class="kw-input"
-        v-model="inputVal"
-        placeholder="如：高洁、爱情、隐逸"
-        placeholder-style="color:#94a3b8"
-        confirm-type="search"
-        @confirm="doMatch"
-      />
-      <view class="search-btn" @click="doMatch">
-        <text class="search-btn-text">匹配</text>
-      </view>
-    </view>
-
-    <!-- Results -->
-    <view v-if="searched" class="result-wrap">
-      <view v-if="results.length === 0" class="empty-box">
-        <text class="empty-text">暂无对应花卉，请尝试其他关键词</text>
-      </view>
-      <view v-else>
-        <view class="result-header">
-          <text class="result-title">匹配结果（{{ results.length }}）</text>
+  <scroll-view class="explore-page" scroll-y>
+    <view class="explore-container">
+      <view class="explore-hero glass">
+        <view><text class="section-kicker">POETIC IMAGERY</text><text class="explore-title">从一个词，遇见一朵花</text><text class="explore-lead">输入情感或文化意象，系统将从十二花神中寻找与你心境相契的诗意表达。</text></view>
+        <view class="search-panel">
+          <input v-model="inputVal" class="search-input" placeholder="试试：高洁、团圆、隐逸、清雅" confirm-type="search" @confirm="doMatch" />
+          <view class="search-button" @click="doMatch"><text>开始匹配</text></view>
         </view>
-        <view
-          v-for="item in results"
-          :key="item.month"
-          class="result-card"
-          @click="goDetail(item.month)"
-        >
-          <view class="result-dot" :style="'background:' + monthColor(item.month)">
-            <text class="result-dot-text">{{ item.flower.slice(0,1) }}</text>
-          </view>
-          <view class="result-info">
-            <view class="result-top-row">
-              <text class="result-flower">{{ item.flower }}</text>
-              <view class="result-month-tag" :style="'background:' + monthColor(item.month) + '22'">
-                <text class="result-month-tag-text" :style="'color:' + monthColor(item.month)">
-                  {{ item.monthName }}
-                </text>
-              </view>
-            </view>
-            <text class="result-meta">{{ item.godName }} · {{ item.dynasty }}</text>
-            <text class="result-poem">「{{ item.poem.length > 24 ? item.poem.slice(0,24) + '…' : item.poem }}」</text>
-            <view class="kw-mini-row">
-              <view v-for="kw in item.keywords" :key="kw" class="kw-mini-chip">
-                <text class="kw-mini-text">{{ kw }}</text>
-              </view>
+      </view>
+
+      <view class="keyword-section">
+        <text class="keyword-label">常用文化意象</text>
+        <view class="chips-wrap"><view v-for="kw in allKeywords" :key="kw" class="chip" :class="inputVal===kw?'active':''" @click="selectChip(kw)"><text>{{ kw }}</text></view></view>
+      </view>
+
+      <view v-if="searched" class="result-section">
+        <view class="result-heading"><view><text class="section-kicker">MATCHED FLOWERS</text><text class="result-title">匹配结果</text></view><text class="result-count">{{ results.length }} 个结果</text></view>
+        <view v-if="results.length" class="result-grid">
+          <view v-for="item in results" :key="item.month" class="result-card glass" @click="goDetail(item.month)">
+            <image class="result-image" :src="flowerImage(item.month)" mode="aspectFill" lazy-load />
+            <view class="result-content">
+              <view class="result-top"><text class="result-flower">{{ item.flower }}</text><text class="result-month">{{ item.monthName }}</text></view>
+              <text class="result-meta">花神 {{ item.godName }} · {{ item.dynasty }}</text><text class="result-poem">“{{ item.poem }}”</text>
+              <view class="mini-tags"><text v-for="kw in item.keywords" :key="kw">{{ kw }}</text></view>
+              <text class="result-link">查看完整花神故事 →</text>
             </view>
           </view>
         </view>
+        <view v-else class="empty-card glass"><text class="empty-mark">花</text><text class="empty-title">暂未找到契合的花神</text><text class="empty-desc">换一个更简洁的情感或意象词试试，例如“高洁”“爱情”“自然”。</text></view>
       </view>
+      <view v-else class="guide-card"><text class="guide-no">38</text><view><text class="guide-title">个预设文化关键词</text><text class="guide-desc">支持精确与模糊匹配，无需 AI 服务也能完成探索。</text></view></view>
+      <AppFooter />
     </view>
-
-    <!-- Placeholder before search -->
-    <view v-if="!searched" class="hint-box">
-      <text class="hint-text">点击意象词或在输入框中输入关键词后按匹配</text>
-    </view>
-
-    <view style="height: 60rpx;"></view>
   </scroll-view>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ALL_KEYWORDS, MONTH_COLORS, recommendByKeyword, type FlowerItem } from '../../utils/flowerData'
-
-const allKeywords = ref<string[]>(ALL_KEYWORDS)
-const inputVal = ref<string>('')
-const results = ref<FlowerItem[]>([])
-const searched = ref<boolean>(false)
-
-function monthColor(month : number) : string {
-  return MONTH_COLORS[(month - 1 + MONTH_COLORS.length) % MONTH_COLORS.length]
-}
-
-function selectChip(kw : string) {
-  inputVal.value = kw
-  doMatch()
-}
-
-function doMatch() {
-  const kw = inputVal.value.trim()
-  if (kw === '') {
-    uni.showToast({ title: '请输入关键词', icon: 'none' })
-    return
-  }
-  results.value = recommendByKeyword(kw)
-  searched.value = true
-}
-
-function goDetail(month : number) {
-  uni.navigateTo({ url: `/pages/month/month?month=${month}` })
-}
+import AppFooter from '../../components/app-footer.vue'
+import { ALL_KEYWORDS,recommendByKeyword,getFlowerImage,type FlowerItem } from '../../utils/flowerData'
+const allKeywords=ref(ALL_KEYWORDS),inputVal=ref(''),results=ref<FlowerItem[]>([]),searched=ref(false)
+function flowerImage(month:number){return getFlowerImage(month)}
+function selectChip(kw:string){inputVal.value=kw;doMatch()}
+function doMatch(){const kw=inputVal.value.trim();if(!kw){uni.showToast({title:'请输入关键词',icon:'none'});return}results.value=recommendByKeyword(kw);searched.value=true}
+function goDetail(month:number){uni.setStorageSync('selected_month',month);uni.switchTab({url:'/pages/month/month'})}
 </script>
-
 <style>
-.page-bg {
-  min-height: 100vh;
-  height: 100vh;
-  flex: 1;
-  background-color: #eef6fd;
-}
-
-.hero-card {
-  margin: 30rpx 28rpx 0;
-  background-color: #2563eb;
-  border-radius: 24rpx;
-  padding: 40rpx 36rpx;
-}
-
-.hero-title {
-  font-size: 40rpx;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.hero-desc {
-  font-size: 24rpx;
-  color: rgba(255,255,255,0.75);
-  margin-top: 10rpx;
-}
-
-.section-header {
-  margin: 32rpx 28rpx 16rpx;
-}
-
-.section-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #1e3a5f;
-}
-
-.chips-wrap {
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0 28rpx;
-  gap: 14rpx;
-}
-
-.chip {
-  border-radius: 28rpx;
-  padding: 10rpx 26rpx;
-  background-color: #dbeafe;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #bfdbfe;
-}
-
-.chip-active {
-  background-color: #2563eb;
-  border-color: #2563eb;
-}
-
-.chip-text {
-  font-size: 24rpx;
-  font-weight: 500;
-}
-
-.input-wrap {
-  margin: 28rpx 28rpx 0;
-  flex-direction: row;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.kw-input {
-  flex: 1;
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  padding: 24rpx 28rpx;
-  font-size: 28rpx;
-  color: #1e3a5f;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #bfdbfe;
-}
-
-.search-btn {
-  background-color: #2563eb;
-  border-radius: 16rpx;
-  padding: 24rpx 36rpx;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-btn-text {
-  font-size: 28rpx;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.result-wrap {
-  margin: 28rpx 28rpx 0;
-}
-
-.result-header {
-  margin-bottom: 16rpx;
-}
-
-.result-title {
-  font-size: 26rpx;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.result-card {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 28rpx;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20rpx;
-  margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 12rpx rgba(37,99,235,0.06);
-}
-
-.result-dot {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 36rpx;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.result-dot-text {
-  font-size: 28rpx;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.result-info {
-  flex: 1;
-  gap: 8rpx;
-}
-
-.result-top-row {
-  flex-direction: row;
-  align-items: center;
-  gap: 14rpx;
-}
-
-.result-flower {
-  font-size: 32rpx;
-  font-weight: 700;
-  color: #1e3a5f;
-}
-
-.result-month-tag {
-  border-radius: 20rpx;
-  padding: 4rpx 16rpx;
-}
-
-.result-month-tag-text {
-  font-size: 22rpx;
-  font-weight: 500;
-}
-
-.result-meta {
-  font-size: 24rpx;
-  color: #64748b;
-}
-
-.result-poem {
-  font-size: 24rpx;
-  color: #475569;
-  font-style: italic;
-  line-height: 1.6;
-}
-
-.kw-mini-row {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 8rpx;
-  margin-top: 4rpx;
-}
-
-.kw-mini-chip {
-  background-color: #f1f5f9;
-  border-radius: 16rpx;
-  padding: 4rpx 16rpx;
-}
-
-.kw-mini-text {
-  font-size: 20rpx;
-  color: #64748b;
-}
-
-.empty-box {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 60rpx 28rpx;
-  align-items: center;
-}
-
-.empty-text {
-  font-size: 26rpx;
-  color: #94a3b8;
-  text-align: center;
-}
-
-.hint-box {
-  margin: 40rpx 28rpx 0;
-  align-items: center;
-}
-
-.hint-text {
-  font-size: 24rpx;
-  color: #94a3b8;
-  text-align: center;
-  line-height: 1.7;
-}
+@import '../../common/theme.css';
+.explore-page{height:100vh;background:#f3f7f5}.explore-container{width:calc(100% - 48px);max-width:1120px;margin:0 auto;padding:32px 0}.explore-hero{border-radius:30px;padding:54px;display:grid;grid-template-columns:1.15fr 1fr;gap:60px;align-items:center}.explore-title{margin-top:13px;color:#183f34;font:48px/1.2 'STKaiti','KaiTi',serif;letter-spacing:3px}.explore-lead{margin-top:18px;color:#6b8179;font-size:15px;line-height:1.9}.search-panel{padding:12px;border-radius:18px;background:#edf3f0;flex-direction:row;gap:9px}.search-input{flex:1;height:50px;padding:0 17px;background:#fff;border-radius:12px;color:#254a40;font-size:14px}.search-button{height:50px;padding:0 22px;border-radius:12px;background:#183f34;color:#fff;align-items:center;justify-content:center;font-size:13px;cursor:pointer}.keyword-section{margin:38px 4px}.keyword-label{color:#6f847d;font-size:12px;letter-spacing:2px}.chips-wrap{margin-top:16px;flex-direction:row;flex-wrap:wrap;gap:9px}.chip{padding:8px 15px;border:1px solid #d3e1dc;border-radius:100px;background:rgba(255,255,255,.66);color:#648078;font-size:12px;cursor:pointer}.chip.active{background:#183f34;color:#fff;border-color:#183f34}.result-section{margin-top:58px}.result-heading{flex-direction:row;justify-content:space-between;align-items:end;margin-bottom:24px}.result-title{margin-top:8px;font:34px 'STKaiti','KaiTi',serif}.result-count{color:#879991;font-size:12px}.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.result-card{border-radius:22px;overflow:hidden;display:grid;grid-template-columns:42% 1fr;min-height:310px;cursor:pointer;transition:.3s}.result-card:hover{transform:translateY(-5px)}.result-image{width:100%;height:100%}.result-content{padding:28px 25px}.result-top{flex-direction:row;justify-content:space-between;align-items:center}.result-flower{font:29px 'STKaiti','KaiTi',serif}.result-month{color:#8aa097;font-size:11px}.result-meta{margin-top:6px;color:#8a9b95;font-size:11px}.result-poem{margin-top:18px;color:#5b7169;font:15px/1.75 'STKaiti','KaiTi',serif}.mini-tags{margin-top:15px;flex-direction:row;flex-wrap:wrap;gap:6px}.mini-tags text{padding:4px 8px;background:#edf4f1;border-radius:100px;color:#6c847c;font-size:10px}.result-link{margin-top:auto;color:#42675c;font-size:11px}.empty-card{border-radius:24px;padding:70px 30px;align-items:center;text-align:center}.empty-mark{width:60px;height:60px;border-radius:50%;background:#e7efeb;color:#759087;align-items:center;justify-content:center;font:25px 'KaiTi',serif}.empty-title{margin-top:18px;font:25px 'KaiTi',serif}.empty-desc{margin-top:9px;color:#82958e;font-size:13px}.guide-card{margin-top:70px;padding:38px;border-top:1px solid #d7e3de;border-bottom:1px solid #d7e3de;flex-direction:row;justify-content:center;align-items:center;gap:22px}.guide-no{font:52px Georgia,serif;color:#b27c68}.guide-title{font:20px 'KaiTi',serif}.guide-desc{margin-top:6px;color:#84958f;font-size:12px}
+@media(max-width:760px){.explore-container{width:calc(100% - 28px);padding-top:14px}.explore-hero{grid-template-columns:1fr;padding:32px;gap:28px}.explore-title{font-size:38px}.result-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.search-panel{flex-direction:column}.search-button{width:100%}.result-card{grid-template-columns:1fr}.result-image{height:280px}}
 </style>

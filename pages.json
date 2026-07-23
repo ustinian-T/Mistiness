@@ -4,7 +4,7 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "花月诗境",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -12,7 +12,7 @@
 			"path": "pages/month/month",
 			"style": {
 				"navigationBarTitleText": "按月导览",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -20,7 +20,7 @@
 			"path": "pages/keyword/keyword",
 			"style": {
 				"navigationBarTitleText": "意象匹配",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -28,7 +28,7 @@
 			"path": "pages/dynasty/dynasty",
 			"style": {
 				"navigationBarTitleText": "朝代统计",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -36,7 +36,7 @@
 			"path": "pages/podcast/podcast",
 			"style": {
 				"navigationBarTitleText": "花月播客",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -44,7 +44,7 @@
 			"path": "pages/auth/auth",
 			"style": {
 				"navigationBarTitleText": "登录 / 注册",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -52,7 +52,7 @@
 			"path": "pages/profile/profile",
 			"style": {
 				"navigationBarTitleText": "个人中心",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		},
@@ -60,7 +60,7 @@
 			"path": "pages/webview/webview",
 			"style": {
 				"navigationBarTitleText": "外部链接",
-				"navigationBarBackgroundColor": "#e8f4fd",
+				"navigationBarBackgroundColor": "#f3f7f5",
 				"navigationBarTextStyle": "black"
 			}
 		}
@@ -68,13 +68,13 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "花月诗境",
-		"navigationBarBackgroundColor": "#e8f4fd",
-		"backgroundColor": "#e8f4fd"
+		"navigationBarBackgroundColor": "#f3f7f5",
+		"backgroundColor": "#f3f7f5"
 	},
 	"tabBar": {
 		"color": "#64748b",
-		"selectedColor": "#2563eb",
-		"backgroundColor": "#f0f8ff",
+		"selectedColor": "#183f34",
+		"backgroundColor": "#f7faf8",
 		"borderStyle": "white",
 		"list": [
 			{

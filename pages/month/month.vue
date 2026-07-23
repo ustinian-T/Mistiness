@@ -1,390 +1,76 @@
 <template>
-  <scroll-view class="page-bg" scroll-y>
-
-    <!-- Month Selector -->
-    <view class="selector-bar">
+  <scroll-view class="month-page" scroll-y>
+    <view class="month-nav glass">
       <scroll-view scroll-x class="month-scroll">
-        <view class="month-tab-row">
-          <view
-            v-for="item in flowers"
-            :key="item.month"
-            class="month-tab"
-            :class="selectedMonth === item.month ? 'month-tab-active' : ''"
-            :style="selectedMonth === item.month ? 'background:' + monthColor(item.month) : ''"
-            @click="selectMonth(item.month)"
-          >
-            <text
-              class="month-tab-text"
-              :style="selectedMonth === item.month ? 'color:#fff' : 'color:#64748b'"
-            >{{ item.month }}月</text>
+        <view class="month-tabs">
+          <view v-for="item in flowers" :key="item.month" class="month-tab" :class="selectedMonth===item.month?'active':''" @click="selectMonth(item.month)">
+            <text class="tab-number">{{ String(item.month).padStart(2,'0') }}</text><text class="tab-name">{{ item.flower }}</text>
           </view>
         </view>
       </scroll-view>
     </view>
 
-    <!-- Detail Card -->
-    <view v-if="current != null" class="detail-wrap">
-
-      <!-- Header -->
-      <view class="detail-header" :style="'border-top: 6rpx solid ' + monthColor(selectedMonth)">
-        <view class="detail-header-left">
-          <text class="detail-month-name">{{ current.monthName }}</text>
-          <text class="detail-flower">{{ current.flower }}</text>
-          <view class="dynasty-tag" :style="'background:' + tagBg(selectedMonth)">
-            <text class="dynasty-tag-text">{{ current.dynasty }}</text>
-          </view>
+    <view v-if="current" class="month-container">
+      <view class="detail-hero glass">
+        <view class="detail-media">
+          <image class="detail-flower-image" :src="flowerImage(selectedMonth)" mode="aspectFill" />
+          <view class="media-shade"></view>
+          <view class="media-caption"><text class="caption-month">{{ current.monthName }}</text><text class="caption-flower">{{ current.flower }}</text></view>
         </view>
-        <view class="detail-dot" :style="'background:' + monthColor(selectedMonth)">
-          <text class="detail-dot-text">{{ current.flower.slice(0,1) }}</text>
-        </view>
-      </view>
-
-      <!-- Meta Row -->
-      <view class="meta-row">
-        <view class="meta-item">
-          <text class="meta-label">花神人物</text>
-          <text class="meta-value">{{ current.godName }}</text>
-        </view>
-        <view class="meta-divider"></view>
-        <view class="meta-item">
-          <text class="meta-label">所属朝代</text>
-          <text class="meta-value">{{ current.dynasty }}</text>
-        </view>
-      </view>
-
-      <!-- Poem -->
-      <view class="section-block">
-        <text class="block-label">经典诗句</text>
-        <view class="poem-box" :style="'border-left: 4rpx solid ' + monthColor(selectedMonth)">
-          <text class="poem-text">「{{ current.poem }}」</text>
-        </view>
-      </view>
-
-      <!-- Keywords -->
-      <view class="section-block">
-        <text class="block-label">文化意象关键词</text>
-        <view class="kw-row">
-          <view
-            v-for="kw in current.keywords"
-            :key="kw"
-            class="kw-chip"
-            :style="'background:' + tagBg(selectedMonth) + ';border-color:' + monthColor(selectedMonth)"
-          >
-            <text class="kw-chip-text" :style="'color:' + monthColor(selectedMonth)">{{ kw }}</text>
+        <view class="detail-intro">
+          <text class="detail-kicker">MONTHLY FLOWER DEITY · {{ String(selectedMonth).padStart(2,'0') }}</text>
+          <text class="detail-title">{{ current.flower }} · {{ current.godName }}</text>
+          <text class="detail-poem">“{{ current.poem }}”</text>
+          <view class="keyword-row"><text v-for="keyword in current.keywords" :key="keyword">{{ keyword }}</text></view>
+          <text class="detail-summary">{{ current.cultureImage }}</text>
+          <view class="intro-actions">
+            <view class="primary-action" @click="goPodcast"><text>生成花月播客</text></view>
+            <view class="secondary-action" @click="copyAiScript"><text>复制讲解文案</text></view>
           </view>
         </view>
       </view>
 
-      <!-- Culture Image -->
-      <view class="section-block">
-        <text class="block-label">文化意象</text>
-        <text class="block-body">{{ current.cultureImage }}</text>
-      </view>
-
-      <!-- Dynasty Style -->
-      <view class="section-block">
-        <text class="block-label">朝代诗词风格</text>
-        <text class="block-body">{{ current.dynastyStyle }}</text>
-      </view>
-
-      <!-- AI Script -->
-      <view class="section-block">
-        <text class="block-label">花神讲解</text>
-        <text class="block-body ai-text">{{ current.aiScript }}</text>
-      </view>
-
-      <!-- Action Buttons -->
-      <view class="action-row">
-        <view class="btn-primary" @click="goPodcast">
-          <text class="btn-primary-text">生成播客文案</text>
+      <view class="content-grid">
+        <view class="portrait-card glass">
+          <image class="portrait-image" :src="godImage(selectedMonth)" mode="aspectFill" />
+          <view class="portrait-info"><text class="content-label">花神人物</text><text class="portrait-name">{{ current.godName }}</text><text class="portrait-dynasty">{{ current.dynasty }} · {{ current.monthName }}花神</text></view>
         </view>
-        <view class="btn-ghost" @click="copyAiScript">
-          <text class="btn-ghost-text">复制讲解</text>
+        <view class="narrative-card glass">
+          <view class="narrative-section"><text class="content-label">文化意象</text><text class="content-body">{{ current.cultureImage }}</text></view>
+          <view class="divider"></view>
+          <view class="narrative-section"><text class="content-label">朝代诗词风格</text><text class="content-body">{{ current.dynastyStyle }}</text></view>
         </view>
       </view>
 
+      <view class="script-card glass">
+        <view class="script-head"><view><text class="content-label">AI CURATED NARRATION</text><text class="script-title">花神讲解</text></view><text class="script-index">{{ String(selectedMonth).padStart(2,'0') }}</text></view>
+        <text class="script-body">{{ current.aiScript }}</text>
+      </view>
+
+      <AppFooter />
     </view>
-
-    <view style="height: 60rpx;"></view>
   </scroll-view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
-import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
-
-const flowers = ref<FlowerItem[]>(FLOWERS)
-const selectedMonth = ref<number>(1)
-const current = ref<FlowerItem | null>(null)
-
-function monthColor(month : number) : string {
-  return MONTH_COLORS[(month - 1 + MONTH_COLORS.length) % MONTH_COLORS.length]
-}
-
-function tagBg(month : number) : string {
-  const c = MONTH_COLORS[(month - 1 + MONTH_COLORS.length) % MONTH_COLORS.length]
-  return c + '22'
-}
-
-function selectMonth(month : number) {
-  selectedMonth.value = month
-  current.value = getFlowerByMonth(month)
-}
-
-function goPodcast() {
-  uni.setStorageSync('podcast_month', selectedMonth.value)
-  uni.switchTab({ url: '/pages/podcast/podcast' })
-}
-
-function copyAiScript() {
-  if (current.value == null) return
-  uni.setClipboardData({
-    data: current.value.aiScript,
-    success: () => {
-      uni.showToast({ title: '已复制讲解内容', icon: 'success' })
-    }
-  })
-}
-
-function loadSelectedMonth(monthValue : number) {
-  selectedMonth.value = (monthValue >= 1 && monthValue <= 12) ? monthValue : 1
-  current.value = getFlowerByMonth(selectedMonth.value)
-}
-
-onLoad((options: any = {}) => {
-  const stored = Number(uni.getStorageSync('selected_month') || 0)
-  const fromOptions = parseInt((options?.['month'] as string) ?? '0')
-  loadSelectedMonth(fromOptions || stored || 1)
-})
-
-onShow(() => {
-  const stored = Number(uni.getStorageSync('selected_month') || 0)
-  if (stored >= 1 && stored <= 12 && stored !== selectedMonth.value) {
-    loadSelectedMonth(stored)
-  }
-})
+import AppFooter from '../../components/app-footer.vue'
+import { FLOWERS,getFlowerByMonth,getFlowerImage,getGodImage,type FlowerItem } from '../../utils/flowerData'
+const flowers=ref<FlowerItem[]>(FLOWERS);const selectedMonth=ref(1);const current=ref<FlowerItem|null>(FLOWERS[0])
+function flowerImage(month:number){return getFlowerImage(month)}
+function godImage(month:number){return getGodImage(month)}
+function selectMonth(month:number){selectedMonth.value=month;current.value=getFlowerByMonth(month);uni.setStorageSync('selected_month',month)}
+function goPodcast(){uni.setStorageSync('podcast_month',selectedMonth.value);uni.switchTab({url:'/pages/podcast/podcast'})}
+function copyAiScript(){if(!current.value)return;uni.setClipboardData({data:current.value.aiScript,success:()=>uni.showToast({title:'讲解文案已复制',icon:'success'})})}
+function loadMonth(month:number){selectMonth(month>=1&&month<=12?month:1)}
+onLoad((options:any={})=>loadMonth(parseInt(options?.month||'0')||Number(uni.getStorageSync('selected_month'))||1))
+onShow(()=>{const month=Number(uni.getStorageSync('selected_month'));if(month&&month!==selectedMonth.value)loadMonth(month)})
 </script>
 
 <style>
-.page-bg {
-  min-height: 100vh;
-  height: 100vh;
-  flex: 1;
-  background-color: #eef6fd;
-}
-
-.selector-bar {
-  background-color: #ffffff;
-  padding: 20rpx 0;
-  box-shadow: 0 2rpx 12rpx rgba(37,99,235,0.06);
-}
-
-.month-scroll {
-  width: 100%;
-}
-
-.month-tab-row {
-  flex-direction: row;
-  padding: 0 20rpx;
-  gap: 12rpx;
-}
-
-.month-tab {
-  padding: 12rpx 24rpx;
-  border-radius: 32rpx;
-  background-color: #f1f5f9;
-  white-space: nowrap;
-}
-
-.month-tab-active {
-  /* dynamic color applied inline */
-}
-
-.month-tab-text {
-  font-size: 26rpx;
-  font-weight: 500;
-}
-
-.detail-wrap {
-  margin: 24rpx 28rpx 0;
-  gap: 20rpx;
-}
-
-.detail-header {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 32rpx 28rpx;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4rpx 16rpx rgba(37,99,235,0.07);
-}
-
-.detail-header-left {
-  flex: 1;
-  gap: 10rpx;
-}
-
-.detail-month-name {
-  font-size: 24rpx;
-  color: #94a3b8;
-}
-
-.detail-flower {
-  font-size: 48rpx;
-  font-weight: 700;
-  color: #1e3a5f;
-  line-height: 1.15;
-}
-
-.dynasty-tag {
-  align-self: flex-start;
-  border-radius: 20rpx;
-  padding: 6rpx 20rpx;
-  margin-top: 4rpx;
-}
-
-.dynasty-tag-text {
-  font-size: 22rpx;
-  color: #475569;
-  font-weight: 500;
-}
-
-.detail-dot {
-  width: 88rpx;
-  height: 88rpx;
-  border-radius: 44rpx;
-  align-items: center;
-  justify-content: center;
-}
-
-.detail-dot-text {
-  font-size: 36rpx;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.meta-row {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  flex-direction: row;
-  padding: 28rpx;
-  box-shadow: 0 2rpx 12rpx rgba(37,99,235,0.06);
-}
-
-.meta-item {
-  flex: 1;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.meta-divider {
-  width: 1rpx;
-  background-color: #e2e8f0;
-  margin: 0 20rpx;
-}
-
-.meta-label {
-  font-size: 22rpx;
-  color: #94a3b8;
-}
-
-.meta-value {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #1e3a5f;
-}
-
-.section-block {
-  background-color: #ffffff;
-  border-radius: 20rpx;
-  padding: 28rpx;
-  gap: 14rpx;
-  box-shadow: 0 2rpx 12rpx rgba(37,99,235,0.06);
-}
-
-.block-label {
-  font-size: 24rpx;
-  font-weight: 600;
-  color: #2563eb;
-}
-
-.poem-box {
-  padding: 16rpx 20rpx;
-  background-color: #f8fbff;
-  border-radius: 12rpx;
-}
-
-.poem-text {
-  font-size: 28rpx;
-  color: #1e3a5f;
-  line-height: 1.8;
-  font-style: italic;
-}
-
-.kw-row {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 12rpx;
-}
-
-.kw-chip {
-  border-radius: 24rpx;
-  padding: 8rpx 24rpx;
-  border-width: 1rpx;
-  border-style: solid;
-}
-
-.kw-chip-text {
-  font-size: 24rpx;
-  font-weight: 500;
-}
-
-.block-body {
-  font-size: 26rpx;
-  color: #475569;
-  line-height: 1.9;
-}
-
-.ai-text {
-  color: #334155;
-}
-
-.action-row {
-  flex-direction: row;
-  gap: 20rpx;
-  padding-bottom: 8rpx;
-}
-
-.btn-primary {
-  flex: 1;
-  background-color: #2563eb;
-  border-radius: 16rpx;
-  padding: 28rpx;
-  align-items: center;
-}
-
-.btn-primary-text {
-  font-size: 28rpx;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.btn-ghost {
-  flex: 1;
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  padding: 28rpx;
-  align-items: center;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #2563eb;
-}
-
-.btn-ghost-text {
-  font-size: 28rpx;
-  color: #2563eb;
-  font-weight: 600;
-}
+@import '../../common/theme.css';
+.month-page{height:100vh;background:#f3f7f5}.month-nav{position:sticky;top:0;z-index:20;border-radius:0;padding:12px 0}.month-scroll{width:100%}.month-tabs{flex-direction:row;gap:8px;padding:0 max(18px,calc((100vw - 1240px)/2))}.month-tab{min-width:72px;padding:10px 12px;border-radius:14px;align-items:center;gap:3px;color:#789087;cursor:pointer}.month-tab.active{background:#183f34;color:#fff;box-shadow:0 10px 24px rgba(24,63,52,.18)}.tab-number{font:15px Georgia,serif}.tab-name{font-size:11px}.month-container{width:calc(100% - 48px);max-width:1240px;margin:0 auto;padding:28px 0 20px}.detail-hero{min-height:540px;border-radius:30px;display:flex;overflow:hidden}.detail-media{width:48%;position:relative;min-height:540px}.detail-flower-image,.media-shade{position:absolute;inset:0;width:100%;height:100%}.media-shade{background:linear-gradient(180deg,transparent 45%,rgba(8,31,24,.7))}.media-caption{position:absolute;left:30px;bottom:28px;color:#fff}.caption-month{font-size:13px;letter-spacing:3px;opacity:.8}.caption-flower{margin-top:5px;font:44px 'STKaiti','KaiTi',serif;letter-spacing:5px}.detail-intro{flex:1;padding:62px 54px;justify-content:center}.detail-kicker,.content-label{color:#829b92;font:11px Georgia,serif;letter-spacing:2px}.detail-title{margin-top:17px;color:#183f34;font:42px 'STKaiti','KaiTi',serif;letter-spacing:3px}.detail-poem{margin-top:24px;color:#8d6557;font:21px/1.8 'STKaiti','KaiTi',serif}.keyword-row{margin-top:22px;flex-direction:row;flex-wrap:wrap;gap:8px}.keyword-row text{padding:6px 12px;border-radius:100px;background:#e9f1ed;color:#5e786f;font-size:12px}.detail-summary{margin-top:24px;color:#647971;font-size:14px;line-height:1.9}.intro-actions{margin-top:30px;flex-direction:row;flex-wrap:wrap;gap:10px}.primary-action,.secondary-action{height:45px;padding:0 20px;border-radius:100px;align-items:center;justify-content:center;font-size:13px;cursor:pointer}.primary-action{background:#183f34;color:#fff}.secondary-action{border:1px solid #b9ccc5;color:#345d51}.content-grid{display:grid;grid-template-columns:1fr 1.55fr;gap:22px;margin-top:22px}.portrait-card,.narrative-card,.script-card{border-radius:24px;overflow:hidden}.portrait-card{display:grid;grid-template-columns:46% 1fr;min-height:340px}.portrait-image{width:100%;height:100%}.portrait-info{padding:32px;justify-content:center}.portrait-name{margin-top:12px;font:34px 'STKaiti','KaiTi',serif;color:#183f34}.portrait-dynasty{margin-top:7px;color:#81938d;font-size:13px}.narrative-card{padding:42px}.narrative-section{gap:14px}.content-body{color:#536b63;font-size:15px;line-height:2}.divider{height:1px;background:#dce7e2;margin:30px 0}.script-card{margin-top:22px;padding:44px 50px}.script-head{flex-direction:row;justify-content:space-between;align-items:start}.script-title{margin-top:10px;color:#183f34;font:32px 'STKaiti','KaiTi',serif}.script-index{color:#d3e0db;font:60px Georgia,serif}.script-body{margin-top:22px;color:#455f57;font:17px/2.1 'STKaiti','KaiTi',serif;letter-spacing:1px}
+@media(max-width:800px){.month-container{width:calc(100% - 28px)}.detail-hero{flex-direction:column}.detail-media{width:100%;min-height:450px}.detail-intro{padding:38px 30px}.content-grid{grid-template-columns:1fr}.portrait-card{min-height:360px}.script-card{padding:34px 28px}}
+@media(max-width:520px){.month-tabs{padding:0 14px}.detail-media{min-height:390px}.detail-title{font-size:34px}.portrait-card{grid-template-columns:1fr}.portrait-image{height:390px}.portrait-info{padding:26px}.narrative-card{padding:28px}.intro-actions{flex-direction:column}.primary-action,.secondary-action{width:100%}}
 </style>

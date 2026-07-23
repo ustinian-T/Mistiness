@@ -41,9 +41,7 @@
         <text class="flower-info-meta">{{ current.godName }} · {{ current.dynasty }}</text>
         <text class="flower-info-poem">「{{ current.poem.length > 20 ? current.poem.slice(0,20) + '…' : current.poem }}」</text>
       </view>
-      <view class="flower-info-dot" :style="'background:' + monthColor(selectedMonth)">
-        <text class="flower-info-dot-text">{{ current.flower.slice(0,1) }}</text>
-      </view>
+      <image class="flower-info-image" :src="flowerImage(selectedMonth)" mode="aspectFill" />
     </view>
 
     <!-- Generate Button -->
@@ -105,14 +103,15 @@
       <text class="empty-text">点击上方按钮为当前花神生成专属播客文案</text>
     </view>
 
-    <view style="height: 60rpx;"></view>
+    <AppFooter />
   </scroll-view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
-import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
+import AppFooter from '../../components/app-footer.vue'
+import { FLOWERS, MONTH_COLORS, getFlowerByMonth, getFlowerImage, type FlowerItem } from '../../utils/flowerData'
 import { getToken, isLoggedIn, callAiProxy } from '../../utils/auth'
 
 type ParaItem = {
@@ -128,6 +127,10 @@ const generating = ref<boolean>(false)
 const paragraphs = ref<ParaItem[]>([])
 const aiSource = ref<string>('')
 const errorMsg = ref<string>('')
+
+function flowerImage(month : number) : string {
+  return getFlowerImage(month)
+}
 
 function monthColor(month : number) : string {
   return MONTH_COLORS[(month - 1 + MONTH_COLORS.length) % MONTH_COLORS.length]
@@ -518,4 +521,5 @@ onShow(() => {
   text-align: center;
   line-height: 1.7;
 }
+.flower-info-image { width: 150rpx; height: 150rpx; border-radius: 22rpx; flex-shrink: 0; }
 </style>
