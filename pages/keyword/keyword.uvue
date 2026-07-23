@@ -4,12 +4,12 @@
     <!-- Hero -->
     <view class="hero-card">
       <text class="hero-title">意象匹配</text>
-      <text class="hero-desc">输入关键词，发现对应的月令花�?/text>
+      <text class="hero-desc">输入关键词，发现对应的月令花卉</text>
     </view>
 
     <!-- Keyword chips -->
     <view class="section-header">
-      <text class="section-title">常用意象�?/text>
+      <text class="section-title">常用意象词</text>
     </view>
     <view class="chips-wrap">
       <view
@@ -28,7 +28,7 @@
       <input
         class="kw-input"
         v-model="inputVal"
-        placeholder="如：高洁、爱情、隐�?
+        placeholder="如：高洁、爱情、隐逸"
         placeholder-style="color:#94a3b8"
         confirm-type="search"
         @confirm="doMatch"
@@ -41,11 +41,11 @@
     <!-- Results -->
     <view v-if="searched" class="result-wrap">
       <view v-if="results.length === 0" class="empty-box">
-        <text class="empty-text">暂无对应花卉，请尝试其他关键�?/text>
+        <text class="empty-text">暂无对应花卉，请尝试其他关键词</text>
       </view>
       <view v-else>
         <view class="result-header">
-          <text class="result-title">匹配结果（{{ results.length }}�?/text>
+          <text class="result-title">匹配结果（{{ results.length }}）</text>
         </view>
         <view
           v-for="item in results"
@@ -66,7 +66,7 @@
               </view>
             </view>
             <text class="result-meta">{{ item.godName }} · {{ item.dynasty }}</text>
-            <text class="result-poem">「{{ item.poem.length > 24 ? item.poem.slice(0,24) + '�? : item.poem }}�?/text>
+            <text class="result-poem">「{{ item.poem.length > 24 ? item.poem.slice(0,24) + '…' : item.poem }}」</text>
             <view class="kw-mini-row">
               <view v-for="kw in item.keywords" :key="kw" class="kw-mini-chip">
                 <text class="kw-mini-text">{{ kw }}</text>
@@ -80,12 +80,6 @@
     <!-- Placeholder before search -->
     <view v-if="!searched" class="hint-box">
       <text class="hint-text">点击意象词或在输入框中输入关键词后按匹配</text>
-    </view>
-    <!-- Footer -->
-    <view class="page-footer">
-      <text class="footer-text">���ߣ�̷��꣬��˼Ƚ</text>
-      <text class="footer-icp" @click="openICP">��ICP��2026021754��-2</text>
-      <text class="footer-copy">? 2026 ����ʫ�� �� www.mistiness.tshai.top</text>
     </view>
 
     <view style="height: 60rpx;"></view>
@@ -339,32 +333,4 @@ function goDetail(month : number) {
   text-align: center;
   line-height: 1.7;
 }
-.page-footer {
-  padding: 48rpx 28rpx 20rpx;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.footer-text {
-  font-size: 22rpx;
-  color: #64748b;
-  text-align: center;
-  line-height: 1.6;
-}
-
-.footer-icp {
-  font-size: 22rpx;
-  color: #2563eb;
-  text-decoration: underline;
-  text-align: center;
-}
-
-.footer-copy {
-  font-size: 20rpx;
-  color: #94a3b8;
-  text-align: center;
-}
 </style>
-
-
-
