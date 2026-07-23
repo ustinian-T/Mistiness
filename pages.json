@@ -96,10 +96,6 @@
 			{
 				"pagePath": "pages/podcast/podcast",
 				"text": "播客"
-			},
-			{
-				"pagePath": "pages/profile/profile",
-				"text": "个人"
 			}
 		]
 	}

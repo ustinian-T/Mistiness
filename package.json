@@ -1,9 +1,9 @@
 {
-  "name": "huayue-shijing",
+  "name": "mistiness",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "npm --prefix backend start",
-    "dev": "npm --prefix backend run dev",
-    "postinstall": "npm --prefix backend install"
-  }
+  "description": "花月诗境：十二月令花神诗词智能导览系统",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
 }

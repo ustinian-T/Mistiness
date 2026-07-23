@@ -1,15 +1,15 @@
-﻿<template>
+<template>
   <scroll-view class="page-bg" scroll-y>
 
     <!-- Hero -->
     <view class="hero-card">
-      <text class="hero-title">鏈濅唬缁熻</text>
-      <text class="hero-desc">鍚勬湞浠ｈ姳绁炲垎甯冿紝鎰熷彈鏃朵唬鏂囪剦</text>
+      <text class="hero-title">朝代统计</text>
+      <text class="hero-desc">各朝代花神分布，感受时代文脉</text>
     </view>
 
     <!-- Bar Chart -->
     <view class="section-header">
-      <text class="section-title">鑺辩鏈濅唬鍒嗗竷</text>
+      <text class="section-title">花神朝代分布</text>
     </view>
 
     <view class="chart-card">
@@ -27,14 +27,14 @@
 
     <!-- Detail Table -->
     <view class="section-header">
-      <text class="section-title">鏈濅唬鏄庣粏</text>
+      <text class="section-title">朝代明细</text>
     </view>
 
     <view class="table-card">
       <view class="table-head">
-        <text class="th">鏈濅唬</text>
-        <text class="th">鏁伴噺</text>
-        <text class="th flex2">浠ｈ〃鑺辩</text>
+        <text class="th">朝代</text>
+        <text class="th">数量</text>
+        <text class="th flex2">代表花神</text>
       </view>
       <view v-for="item in dynastyList" :key="item.dynasty" class="table-row">
         <text class="td">{{ item.dynasty }}</text>
@@ -55,14 +55,14 @@
 
     <!-- Flower list grouped by dynasty -->
     <view class="section-header">
-      <text class="section-title">鎸夋湞浠ｆ祻瑙堣姳绁?/text>
+      <text class="section-title">按朝代浏览花神</text>
     </view>
 
     <view v-for="item in dynastyList" :key="'group-' + item.dynasty" class="group-card">
       <view class="group-header" :style="'border-left: 5rpx solid ' + item.color">
         <text class="group-dynasty">{{ item.dynasty }}</text>
         <view class="group-count-tag" :style="'background:' + item.color + '22'">
-          <text class="group-count-text" :style="'color:' + item.color">{{ item.count }} 浣嶈姳绁?/text>
+          <text class="group-count-text" :style="'color:' + item.color">{{ item.count }} 位花神</text>
         </view>
       </view>
       <view
@@ -76,9 +76,9 @@
         </view>
         <view class="group-item-info">
           <text class="group-item-flower">{{ flower.flower }}</text>
-          <text class="group-item-meta">{{ flower.monthName }} 路 {{ flower.godName }}</text>
+          <text class="group-item-meta">{{ flower.monthName }} · {{ flower.godName }}</text>
         </view>
-        <text class="group-arrow">鈥?/text>
+        <text class="group-arrow">›</text>
       </view>
     </view>
 
@@ -86,7 +86,7 @@
   </scroll-view>
 </template>
 
-<script setup lang="uts">
+<script setup lang="ts">
 import { FLOWERS, MONTH_COLORS, type FlowerItem } from '../../utils/flowerData'
 
 type DynastyGroup = {
@@ -378,4 +378,3 @@ onMounted(() => {
   color: #94a3b8;
 }
 </style>
-

@@ -1,15 +1,15 @@
-﻿<template>
+<template>
   <scroll-view class="page-bg" scroll-y>
 
     <!-- Hero -->
     <view class="hero-card">
-      <text class="hero-title">鑺辨湀鎾</text>
-      <text class="hero-desc">涓烘瘡浣嶈姳绁炵敓鎴愪笓灞炶瘲澧冩枃妗?/text>
+      <text class="hero-title">花月播客</text>
+      <text class="hero-desc">为每位花神生成专属诗境文案</text>
     </view>
 
     <!-- Month Selector -->
     <view class="section-header">
-      <text class="section-title">閫夋嫨鑺辩</text>
+      <text class="section-title">选择花神</text>
     </view>
     <scroll-view scroll-x class="month-scroll-wrap">
       <view class="month-tab-row">
@@ -29,7 +29,7 @@
           <text
             class="month-tab-num"
             :style="selectedMonth === item.month ? 'color:rgba(255,255,255,0.8)' : 'color:#94a3b8'"
-          >{{ item.month }}鏈?/text>
+          >{{ item.month }}月</text>
         </view>
       </view>
     </scroll-view>
@@ -37,12 +37,12 @@
     <!-- Current flower info -->
     <view v-if="current != null" class="flower-info-card">
       <view class="flower-info-left">
-        <text class="flower-info-name">{{ current!.flower }}</text>
-        <text class="flower-info-meta">{{ current!.godName }} 路 {{ current!.dynasty }}</text>
-        <text class="flower-info-poem">銆寋{ current!.poem.length > 20 ? current!.poem.slice(0,20) + '鈥? : current!.poem }}銆?/text>
+        <text class="flower-info-name">{{ current.flower }}</text>
+        <text class="flower-info-meta">{{ current.godName }} · {{ current.dynasty }}</text>
+        <text class="flower-info-poem">「{{ current.poem.length > 20 ? current.poem.slice(0,20) + '…' : current.poem }}」</text>
       </view>
       <view class="flower-info-dot" :style="'background:' + monthColor(selectedMonth)">
-        <text class="flower-info-dot-text">{{ current!.flower.slice(0,1) }}</text>
+        <text class="flower-info-dot-text">{{ current.flower.slice(0,1) }}</text>
       </view>
     </view>
 
@@ -53,10 +53,10 @@
         :style="generating ? 'background:#94a3b8' : 'background:#2563eb'"
         @click="generatePodcast"
       >
-        <text class="gen-btn-text">{{ generating ? '鐢熸垚涓€? : '鐢熸垚鎾鏂囨' }}</text>
+        <text class="gen-btn-text">{{ generating ? '生成中…' : '生成播客文案' }}</text>
       </view>
       <view class="key-tip" @click="goProfile">
-        <text class="key-tip-text">鏈厤缃?API Key锛熷墠寰€涓汉涓績璁剧疆 鈫?/text>
+        <text class="key-tip-text">未配置 API Key？前往个人中心设置 →</text>
       </view>
     </view>
 
@@ -68,13 +68,13 @@
     <!-- Result -->
     <view v-if="podcastText !== '' || paragraphs.length > 0" class="result-card">
       <view class="result-header-row">
-        <text class="result-label">鎾鏂囨</text>
+        <text class="result-label">播客文案</text>
         <view style="flex-direction:row;align-items:center;gap:12rpx">
           <view v-if="aiSource !== ''" class="source-tag">
             <text class="source-tag-text">{{ aiSource }}</text>
           </view>
           <view class="copy-btn" @click="copyText">
-            <text class="copy-btn-text">澶嶅埗</text>
+            <text class="copy-btn-text">复制</text>
           </view>
         </view>
       </view>
@@ -95,21 +95,21 @@
 
       <!-- Share reminder -->
       <view class="share-hint">
-        <text class="share-hint-text">鉁?鏂囨宸茬敓鎴愶紝鍙鍒跺悗鍒嗕韩鎴栧彂甯?/text>
+        <text class="share-hint-text">✨ 文案已生成，可复制后分享或发布</text>
       </view>
     </view>
 
     <!-- Empty hint -->
     <view v-if="podcastText === '' && paragraphs.length === 0 && !generating && errorMsg === ''" class="empty-hint">
-      <text class="empty-icon">馃帣</text>
-      <text class="empty-text">鐐瑰嚮涓婃柟鎸夐挳涓哄綋鍓嶈姳绁炵敓鎴愪笓灞炴挱瀹㈡枃妗?/text>
+      <text class="empty-icon">🎙</text>
+      <text class="empty-text">点击上方按钮为当前花神生成专属播客文案</text>
     </view>
 
     <view style="height: 60rpx;"></view>
   </scroll-view>
 </template>
 
-<script setup lang="uts">
+<script setup lang="ts">
 import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
 import { getToken, isLoggedIn, callAiProxy } from '../../utils/auth'
 
@@ -142,7 +142,7 @@ function selectMonth(month : number) {
 
 function parseParagraphs(text : string) : ParaItem[] {
   return text.split('\n').map(line => {
-    if (line.startsWith('銆?) && line.endsWith('銆?)) {
+    if (line.startsWith('【') && line.endsWith('】')) {
       return { text: line, type: 'title' } as ParaItem
     }
     if (line === '') {
@@ -154,20 +154,20 @@ function parseParagraphs(text : string) : ParaItem[] {
 
 function buildLocalText(f : FlowerItem) : string {
   return [
-    `銆?{f.monthName}鑺辩 路 ${f.flower}銆慲,
+    `【${f.monthName}花神 · ${f.flower}】`,
     '',
-    `娆㈣繋鏀跺惉鑺辨湀璇楀锛屼粖澶╀负鎮ㄨ杩?{f.monthName}鐨勮姳绁炩€斺€?{f.flower}锛屼互鍙婂ス鐨勫畧鎶よ€?{f.godName}銆俙,
+    `欢迎收听花月诗境，今天为您讲述${f.monthName}的花神——${f.flower}，以及她的守护者${f.godName}。`,
     '',
     f.aiScript,
     '',
-    `璇村埌${f.flower}锛屽氨涓嶅緱涓嶆彁閭ｉ鍗冨彜鍚嶅彞鈥斺€擿,
+    `说到${f.flower}，就不得不提那首千古名句——`,
     `"${f.poem}"`,
     '',
-    `杩欏彞璇楀嚭鑷?{f.dynasty}锛屾鏄?{f.flower}鏂囧寲鎰忚薄鏈€娣卞埢鐨勫啓鐓с€?{f.cultureImage}銆俙,
+    `这句诗出自${f.dynasty}，正是${f.flower}文化意象最深刻的写照。${f.cultureImage}。`,
     '',
-    `浠庤瘲璇嶉鏍兼潵鐪嬶紝${f.dynastyStyle}銆俙,
+    `从诗词风格来看，${f.dynastyStyle}。`,
     '',
-    `浠婃棩鑺辩${f.godName}涓?{f.flower}鐨勬晠浜嬶紝鎰夸负鎮ㄥ湪${f.monthName}甯︽潵涓€浠借瘲鎰忎笌瀹侀潤銆傛劅璋㈡敹鍚姳鏈堣瘲澧冿紝鎴戜滑涓嬫湡鍐嶈銆俙,
+    `今日花神${f.godName}与${f.flower}的故事，愿为您在${f.monthName}带来一份诗意与宁静。感谢收听花月诗境，我们下期再见。`,
   ].join('\n')
 }
 
@@ -226,7 +226,7 @@ async function generatePodcast() {
       const res = await callAiProxy(params)
       if (res.code === 0) {
         const text = res.text as string
-        aiSource.value = res.source === 'server' ? 'AI 路 绯荤粺' : 'AI 路 鑷Key'
+        aiSource.value = res.source === 'server' ? 'AI · 系统' : 'AI · 自备Key'
         streamDisplay(text)
         return
       } else if (res.code === 429) {
@@ -239,7 +239,7 @@ async function generatePodcast() {
   }
 
   // Fallback: local template generation
-  aiSource.value = '鏈湴妯℃澘'
+  aiSource.value = '本地模板'
   streamDisplay(buildLocalText(f))
 }
 
@@ -247,7 +247,7 @@ function copyText() {
   if (podcastText.value === '') return
   uni.setClipboardData({
     data: podcastText.value,
-    success: () => uni.showToast({ title: '鏂囨宸插鍒?, icon: 'success' })
+    success: () => uni.showToast({ title: '文案已复制', icon: 'success' })
   })
 }
 
@@ -504,4 +504,3 @@ onLoad((options ?: AnyObject) => {
   line-height: 1.7;
 }
 </style>
-

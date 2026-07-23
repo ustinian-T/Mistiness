@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <scroll-view class="page-bg" scroll-y>
     <view class="page-wrap">
 
@@ -10,41 +10,41 @@
         <view class="user-info">
           <view class="user-name-row">
             <text class="user-name">{{ displayName }}</text>
-            <view v-if="userInfo != null && userInfo!.role === 'admin'" class="admin-badge">
-              <text class="admin-badge-text">绠＄悊鍛?/text>
+            <view v-if="userInfo != null && userInfo.role === 'admin'" class="admin-badge">
+              <text class="admin-badge-text">管理员</text>
             </view>
           </view>
           <text class="user-sub">
-            {{ userInfo != null && userInfo!.hasInviteCode ? '閭€璇风爜娉ㄥ唽鐢ㄦ埛' : '鑷 Key 鐢ㄦ埛' }}
+            {{ userInfo != null && userInfo.hasInviteCode ? '邀请码注册用户' : '自备 Key 用户' }}
           </text>
         </view>
         <view class="logout-btn" @click="logout">
-          <text class="logout-text">閫€鍑?/text>
+          <text class="logout-text">退出</text>
         </view>
       </view>
 
       <!-- Guest header -->
       <view v-else class="guest-header">
         <view class="guest-info">
-          <text class="guest-title">鑺辨湀璇楀</text>
-          <text class="guest-sub">鐧诲綍鍚庤В閿佹洿澶氬姛鑳?/text>
+          <text class="guest-title">花月诗境</text>
+          <text class="guest-sub">登录后解锁更多功能</text>
         </view>
         <view class="login-btn" @click="goLogin">
-          <text class="login-btn-text">鐧诲綍 / 娉ㄥ唽</text>
+          <text class="login-btn-text">登录 / 注册</text>
         </view>
       </view>
 
       <!-- AI Config Section -->
       <view class="section-card">
-        <text class="section-title">AI 閰嶇疆</text>
+        <text class="section-title">AI 配置</text>
         <text class="section-desc">
-          {{ isLogin && userInfo != null && userInfo!.hasInviteCode
-            ? '宸查€氳繃閭€璇风爜娉ㄥ唽锛屽彲鐩存帴浣跨敤绯荤粺 AI锛屼篃鍙～鍐欒嚜宸辩殑 Key 浣跨敤鏇村棰濆害銆?
-            : '濉啓 OpenAI 鍏煎 API Key 浠ヤ娇鐢?AI 鎾鍔熻兘銆? }}
+          {{ isLogin && userInfo != null && userInfo.hasInviteCode
+            ? '已通过邀请码注册，可直接使用系统 AI，也可填写自己的 Key 使用更多额度。'
+            : '填写 OpenAI 兼容 API Key 以使用 AI 播客功能。' }}
         </text>
 
-        <view v-if="isLogin && userInfo != null && userInfo!.hasInviteCode" class="toggle-row">
-          <text class="toggle-label">浣跨敤鑷繁鐨?API Key</text>
+        <view v-if="isLogin && userInfo != null && userInfo.hasInviteCode" class="toggle-row">
+          <text class="toggle-label">使用自己的 API Key</text>
           <switch :checked="useOwnKey" @change="onToggleOwnKey($event)" color="#2563eb" />
         </view>
 
@@ -61,26 +61,26 @@
                 maxlength="200"
               />
               <view class="eye-btn" @click="showKey = !showKey">
-                <text class="eye-text">{{ showKey ? '闅愯棌' : '鏄剧ず' }}</text>
+                <text class="eye-text">{{ showKey ? '隐藏' : '显示' }}</text>
               </view>
             </view>
           </view>
           <view class="field-wrap" style="margin-top:16rpx">
-            <text class="field-label">API Base URL <text class="optional-tag">鍙€?/text></text>
+            <text class="field-label">API Base URL <text class="optional-tag">可选</text></text>
             <input
               class="field-input"
               v-model="apiBaseUrl"
-              placeholder="榛樿 https://api.openai.com/v1"
+              placeholder="默认 https://api.openai.com/v1"
               placeholder-style="color:#94a3b8"
               maxlength="200"
             />
           </view>
           <view class="action-row" style="margin-top:20rpx">
             <view class="btn-secondary" @click="testKey">
-              <text class="btn-secondary-text">{{ testing ? '楠岃瘉涓€? : '楠岃瘉 Key' }}</text>
+              <text class="btn-secondary-text">{{ testing ? '验证中…' : '验证 Key' }}</text>
             </view>
             <view class="btn-primary-sm" @click="saveKey">
-              <text class="btn-primary-sm-text">{{ saving ? '淇濆瓨涓€? : '淇濆瓨閰嶇疆' }}</text>
+              <text class="btn-primary-sm-text">{{ saving ? '保存中…' : '保存配置' }}</text>
             </view>
           </view>
           <view v-if="keyMsg !== ''" class="msg-box" :style="keyMsgOk ? 'background:#f0fdf4;border-color:#86efac' : 'background:#fef2f2;border-color:#fecaca'">
@@ -89,53 +89,53 @@
         </view>
 
         <view v-else class="hint-green">
-          <text class="hint-green-text">鉁?褰撳墠浣跨敤绯荤粺鍏变韩 AI锛屾棤闇€閰嶇疆</text>
+          <text class="hint-green-text">✓ 当前使用系统共享 AI，无需配置</text>
         </view>
       </view>
 
       <!-- Admin Panel -->
-      <view v-if="isLogin && userInfo != null && userInfo!.role === 'admin'" class="section-card admin-section">
-        <text class="section-title">绠＄悊鍛橀潰鏉?/text>
+      <view v-if="isLogin && userInfo != null && userInfo.role === 'admin'" class="section-card admin-section">
+        <text class="section-title">管理员面板</text>
 
         <view v-if="adminStats != null" class="stats-row">
           <view class="stat-box">
-            <text class="stat-num">{{ adminStats!.totalUsers }}</text>
-            <text class="stat-lbl">娉ㄥ唽鐢ㄦ埛</text>
+            <text class="stat-num">{{ adminStats.totalUsers }}</text>
+            <text class="stat-lbl">注册用户</text>
           </view>
           <view class="stat-box">
-            <text class="stat-num">{{ adminStats!.unusedCodes }}</text>
-            <text class="stat-lbl">鍙敤閭€璇风爜</text>
+            <text class="stat-num">{{ adminStats.unusedCodes }}</text>
+            <text class="stat-lbl">可用邀请码</text>
           </view>
           <view class="stat-box">
-            <text class="stat-num">{{ adminStats!.usedCodes }}</text>
-            <text class="stat-lbl">宸茬敤閭€璇风爜</text>
+            <text class="stat-num">{{ adminStats.usedCodes }}</text>
+            <text class="stat-lbl">已用邀请码</text>
           </view>
         </view>
 
         <view class="field-wrap" style="margin-top:8rpx">
-          <text class="field-label">鐢熸垚閭€璇风爜</text>
+          <text class="field-label">生成邀请码</text>
           <view class="input-row" style="margin-top:8rpx">
             <input
               class="field-input" style="width:120rpx"
               v-model="genCountStr" type="number"
-              placeholder="鏁伴噺" placeholder-style="color:#94a3b8" maxlength="2"
+              placeholder="数量" placeholder-style="color:#94a3b8" maxlength="2"
             />
             <input
               class="field-input flex1" style="margin-left:12rpx"
-              v-model="genNote" placeholder="澶囨敞锛堝彲閫夛級"
+              v-model="genNote" placeholder="备注（可选）"
               placeholder-style="color:#94a3b8" maxlength="40"
             />
           </view>
           <view class="btn-dark" style="margin-top:12rpx" @click="generateCodes">
-            <text class="btn-dark-text">{{ genLoading ? '鐢熸垚涓€? : '鐢熸垚閭€璇风爜' }}</text>
+            <text class="btn-dark-text">{{ genLoading ? '生成中…' : '生成邀请码' }}</text>
           </view>
         </view>
 
         <view v-if="generatedCodes.length > 0" class="codes-box">
           <view class="codes-box-header">
-            <text class="codes-box-label">宸茬敓鎴愶紙鐐瑰嚮澶嶅埗锛?/text>
+            <text class="codes-box-label">已生成（点击复制）</text>
             <view class="copy-all-btn" @click="copyAll">
-              <text class="copy-all-text">澶嶅埗鍏ㄩ儴</text>
+              <text class="copy-all-text">复制全部</text>
             </view>
           </view>
           <view class="chips-row">
@@ -147,13 +147,13 @@
 
         <view style="margin-top:8rpx">
           <view class="list-header">
-            <text class="field-label">鍙敤閭€璇风爜</text>
+            <text class="field-label">可用邀请码</text>
             <view class="refresh-btn" @click="loadAdminData">
-              <text class="refresh-text">鍒锋柊</text>
+              <text class="refresh-text">刷新</text>
             </view>
           </view>
           <view v-if="unusedCodes.length === 0" class="empty-hint">
-            <text class="empty-hint-text">鏆傛棤鍙敤閭€璇风爜</text>
+            <text class="empty-hint-text">暂无可用邀请码</text>
           </view>
           <view v-for="item in unusedCodes" :key="item._id" class="code-row">
             <view class="code-row-left" @click="copyOne(item.code)">
@@ -161,7 +161,7 @@
               <text v-if="item.note !== ''" class="code-note">{{ item.note }}</text>
             </view>
             <view class="del-btn" @click="deleteCode(item._id)">
-              <text class="del-text">鍒犻櫎</text>
+              <text class="del-text">删除</text>
             </view>
           </view>
         </view>
@@ -169,12 +169,12 @@
 
       <!-- About -->
       <view class="section-card">
-        <text class="section-title">鍏充簬</text>
-        <text class="about-text">鑺辨湀璇楀 路 鍗佷簩鏈堜护鑺辩璇楄瘝瀵艰</text>
-        <text class="version-text">v1.0.0 路 浼犳壙涓崕璇楄瘝鏂囧寲涔嬬編</text>
-        <text class="version-text" style="margin-top:8rpx">浣滆€咃細璋功瀹忥紝鍒樻€濆唹</text>
+        <text class="section-title">关于</text>
+        <text class="about-text">花月诗境 · 十二月令花神诗词导览</text>
+        <text class="version-text">v1.0.0 · 传承中华诗词文化之美</text>
+        <text class="version-text" style="margin-top:8rpx">作者：谭书宏，刘思冉</text>
         <view class="icp-row">
-          <text class="icp-link" @click="openICP">婀業CP澶?026021754鍙?2</text>
+          <text class="icp-link" @click="openICP">湘ICP备2026021754号-2</text>
         </view>
         <text class="version-text">www.mistiness.tshai.top</text>
       </view>
@@ -184,7 +184,7 @@
   </scroll-view>
 </template>
 
-<script setup lang="uts">
+<script setup lang="ts">
 import {
   isLoggedIn, getLocalUserInfo, clearAuth, getToken,
   callUserAuth, callAiProxy, callInviteCode, saveAuth, type UserInfo
@@ -205,7 +205,7 @@ type CodeItem = {
 
 const isLogin = ref<boolean>(false)
 const userInfo = ref<UserInfo | null>(null)
-const displayName = ref<string>('娓稿')
+const displayName = ref<string>('游客')
 const avatarColor = ref<string>('#2563eb')
 
 const apiKey = ref<string>('')
@@ -243,7 +243,7 @@ function refreshState() {
     useOwnKey.value = u!.useOwnKey
     apiBaseUrl.value = u!.apiBaseUrl || ''
   } else {
-    displayName.value = '娓稿'
+    displayName.value = '游客'
     apiKey.value = (uni.getStorageSync('guest_api_key') as string) || ''
     apiBaseUrl.value = (uni.getStorageSync('guest_api_base') as string) || ''
   }
@@ -266,7 +266,7 @@ function onToggleOwnKey(e : any) {
 
 async function testKey() {
   if (testing.value || apiKey.value.trim() === '') {
-    keyMsg.value = '璇峰厛濉啓 API Key'
+    keyMsg.value = '请先填写 API Key'
     keyMsgOk.value = false
     return
   }
@@ -281,7 +281,7 @@ async function testKey() {
     keyMsgOk.value = res.code === 0
     keyMsg.value = res.message as string
   } catch {
-    keyMsg.value = '楠岃瘉璇锋眰澶辫触锛岃妫€鏌ョ綉缁?
+    keyMsg.value = '验证请求失败，请检查网络'
     keyMsgOk.value = false
   } finally {
     testing.value = false
@@ -296,7 +296,7 @@ async function saveKey() {
     if (!isLogin.value) {
       uni.setStorageSync('guest_api_key', apiKey.value.trim())
       uni.setStorageSync('guest_api_base', apiBaseUrl.value.trim())
-      keyMsg.value = '閰嶇疆宸蹭繚瀛樺埌鏈湴'
+      keyMsg.value = '配置已保存到本地'
       keyMsgOk.value = true
       return
     }
@@ -320,7 +320,7 @@ async function saveKey() {
       }
     }
   } catch {
-    keyMsg.value = '淇濆瓨澶辫触锛岃閲嶈瘯'
+    keyMsg.value = '保存失败，请重试'
     keyMsgOk.value = false
   } finally {
     saving.value = false
@@ -331,7 +331,7 @@ async function generateCodes() {
   if (genLoading.value) return
   const count = parseInt(genCountStr.value) || 1
   if (count < 1 || count > 50) {
-    uni.showToast({ title: '鏁伴噺闇€鍦?1-50 涔嬮棿', icon: 'none' })
+    uni.showToast({ title: '数量需在 1-50 之间', icon: 'none' })
     return
   }
   genLoading.value = true
@@ -341,12 +341,12 @@ async function generateCodes() {
     if (res.code === 0) {
       generatedCodes.value = res.codes as string[]
       await loadAdminData()
-      uni.showToast({ title: `宸茬敓鎴?${count} 涓個璇风爜`, icon: 'success' })
+      uni.showToast({ title: `已生成 ${count} 个邀请码`, icon: 'success' })
     } else {
       uni.showToast({ title: res.message as string, icon: 'none' })
     }
   } catch {
-    uni.showToast({ title: '鐢熸垚澶辫触锛岃閲嶈瘯', icon: 'none' })
+    uni.showToast({ title: '生成失败，请重试', icon: 'none' })
   } finally {
     genLoading.value = false
   }
@@ -356,20 +356,20 @@ async function deleteCode(id : string) {
   const res = await callInviteCode({ action: 'delete', token: getToken(), codeId: id })
   if (res.code === 0) {
     await loadAdminData()
-    uni.showToast({ title: '宸插垹闄?, icon: 'success' })
+    uni.showToast({ title: '已删除', icon: 'success' })
   } else {
     uni.showToast({ title: res.message as string, icon: 'none' })
   }
 }
 
 function copyOne(code : string) {
-  uni.setClipboardData({ data: code, success: () => uni.showToast({ title: '宸插鍒?, icon: 'success' }) })
+  uni.setClipboardData({ data: code, success: () => uni.showToast({ title: '已复制', icon: 'success' }) })
 }
 
 function copyAll() {
   uni.setClipboardData({
     data: generatedCodes.value.join('\n'),
-    success: () => uni.showToast({ title: `宸插鍒?${generatedCodes.value.length} 涓猔, icon: 'success' })
+    success: () => uni.showToast({ title: `已复制 ${generatedCodes.value.length} 个`, icon: 'success' })
   })
 }
 
@@ -383,13 +383,13 @@ function openICP() {
 
 function logout() {
   uni.showModal({
-    title: '纭閫€鍑?,
-    content: '閫€鍑哄悗闇€閲嶆柊鐧诲綍鎵嶈兘浣跨敤 AI 鍔熻兘',
+    title: '确认退出',
+    content: '退出后需重新登录才能使用 AI 功能',
     success: (res) => {
       if (res.confirm) {
         clearAuth()
         refreshState()
-        uni.showToast({ title: '宸查€€鍑虹櫥褰?, icon: 'success' })
+        uni.showToast({ title: '已退出登录', icon: 'success' })
       }
     }
   })
@@ -477,4 +477,3 @@ onShow(() => {
 .icp-row { margin-top: 12rpx; align-items: center; }
 .icp-link { font-size: 20rpx; color: #2563eb; text-decoration: underline; }
 </style>
-

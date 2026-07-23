@@ -1,15 +1,15 @@
-﻿<template>
+<template>
   <scroll-view class="page-bg" scroll-y>
 
     <!-- Hero -->
     <view class="hero-card">
-      <text class="hero-title">鎰忚薄鍖归厤</text>
-      <text class="hero-desc">杈撳叆鍏抽敭璇嶏紝鍙戠幇瀵瑰簲鐨勬湀浠よ姳鍗?/text>
+      <text class="hero-title">意象匹配</text>
+      <text class="hero-desc">输入关键词，发现对应的月令花卉</text>
     </view>
 
     <!-- Keyword chips -->
     <view class="section-header">
-      <text class="section-title">甯哥敤鎰忚薄璇?/text>
+      <text class="section-title">常用意象词</text>
     </view>
     <view class="chips-wrap">
       <view
@@ -28,24 +28,24 @@
       <input
         class="kw-input"
         v-model="inputVal"
-        placeholder="濡傦細楂樻磥銆佺埍鎯呫€侀殣閫?
+        placeholder="如：高洁、爱情、隐逸"
         placeholder-style="color:#94a3b8"
         confirm-type="search"
         @confirm="doMatch"
       />
       <view class="search-btn" @click="doMatch">
-        <text class="search-btn-text">鍖归厤</text>
+        <text class="search-btn-text">匹配</text>
       </view>
     </view>
 
     <!-- Results -->
     <view v-if="searched" class="result-wrap">
       <view v-if="results.length === 0" class="empty-box">
-        <text class="empty-text">鏆傛棤瀵瑰簲鑺卞崏锛岃灏濊瘯鍏朵粬鍏抽敭璇?/text>
+        <text class="empty-text">暂无对应花卉，请尝试其他关键词</text>
       </view>
       <view v-else>
         <view class="result-header">
-          <text class="result-title">鍖归厤缁撴灉锛坽{ results.length }}锛?/text>
+          <text class="result-title">匹配结果（{{ results.length }}）</text>
         </view>
         <view
           v-for="item in results"
@@ -65,8 +65,8 @@
                 </text>
               </view>
             </view>
-            <text class="result-meta">{{ item.godName }} 路 {{ item.dynasty }}</text>
-            <text class="result-poem">銆寋{ item.poem.length > 24 ? item.poem.slice(0,24) + '鈥? : item.poem }}銆?/text>
+            <text class="result-meta">{{ item.godName }} · {{ item.dynasty }}</text>
+            <text class="result-poem">「{{ item.poem.length > 24 ? item.poem.slice(0,24) + '…' : item.poem }}」</text>
             <view class="kw-mini-row">
               <view v-for="kw in item.keywords" :key="kw" class="kw-mini-chip">
                 <text class="kw-mini-text">{{ kw }}</text>
@@ -79,14 +79,14 @@
 
     <!-- Placeholder before search -->
     <view v-if="!searched" class="hint-box">
-      <text class="hint-text">鐐瑰嚮鎰忚薄璇嶆垨鍦ㄨ緭鍏ユ涓緭鍏ュ叧閿瘝鍚庢寜鍖归厤</text>
+      <text class="hint-text">点击意象词或在输入框中输入关键词后按匹配</text>
     </view>
 
     <view style="height: 60rpx;"></view>
   </scroll-view>
 </template>
 
-<script setup lang="uts">
+<script setup lang="ts">
 import { ALL_KEYWORDS, MONTH_COLORS, recommendByKeyword, type FlowerItem } from '../../utils/flowerData'
 
 const allKeywords = ref<string[]>(ALL_KEYWORDS)
@@ -106,7 +106,7 @@ function selectChip(kw : string) {
 function doMatch() {
   const kw = inputVal.value.trim()
   if (kw === '') {
-    uni.showToast({ title: '璇疯緭鍏ュ叧閿瘝', icon: 'none' })
+    uni.showToast({ title: '请输入关键词', icon: 'none' })
     return
   }
   results.value = recommendByKeyword(kw)
@@ -334,4 +334,3 @@ function goDetail(month : number) {
   line-height: 1.7;
 }
 </style>
-

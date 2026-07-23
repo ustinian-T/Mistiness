@@ -1,32 +1,32 @@
-﻿<template>
+<template>
   <scroll-view class="page-bg" scroll-y>
 
     <!-- Hero Banner -->
     <view class="hero-card">
-      <text class="hero-title">鑺辨湀璇楀</text>
-      <text class="hero-sub">鏈堜护鑺辩锛屼竴澧冨叆璇?/text>
-      <text class="hero-desc">婕父鍗佷簩鑺辩锛屾煡璇㈣瘲璇嶆剰璞?/text>
+      <text class="hero-title">花月诗境</text>
+      <text class="hero-sub">月令花神，一境入诗</text>
+      <text class="hero-desc">漫游十二花神，查询诗词意象</text>
     </view>
 
     <!-- Stats Row -->
     <view class="stats-row">
       <view class="stat-card">
         <text class="stat-value">12</text>
-        <text class="stat-label">鏈堜护鑺辩</text>
+        <text class="stat-label">月令花神</text>
       </view>
       <view class="stat-card">
         <text class="stat-value">31</text>
-        <text class="stat-label">鎰忚薄璇嶆眹</text>
+        <text class="stat-label">意象词汇</text>
       </view>
       <view class="stat-card">
         <text class="stat-value">6</text>
-        <text class="stat-label">鍘嗗彶鏈濅唬</text>
+        <text class="stat-label">历史朝代</text>
       </view>
     </view>
 
     <!-- Month Grid Title -->
     <view class="section-header">
-      <text class="section-title">鍗佷簩鑺辩鏈堝巻</text>
+      <text class="section-title">十二花神月历</text>
     </view>
 
     <!-- Month Grid -->
@@ -42,7 +42,7 @@
           <text class="tile-month-num">{{ String(item.month).padStart(2,'0') }}</text>
           <text class="tile-month-name">{{ item.monthName }}</text>
           <text class="tile-flower">{{ item.flower }}</text>
-          <text class="tile-meta">{{ item.godName }} 路 {{ item.dynasty }}</text>
+          <text class="tile-meta">{{ item.godName }} · {{ item.dynasty }}</text>
         </view>
         <view class="tile-dot" :style="'background:' + monthColor(item.month)">
           <text class="tile-dot-text">{{ item.flower.slice(0,1) }}</text>
@@ -52,28 +52,33 @@
 
     <!-- Feature Cards -->
     <view class="section-header">
-      <text class="section-title">鍔熻兘瀵艰</text>
+      <text class="section-title">功能导览</text>
     </view>
     <view class="feature-grid">
       <view class="feature-card" @click="goPage('/pages/month/month')">
-        <text class="feature-icon">馃尭</text>
-        <text class="feature-name">鎸夋湀瀵艰</text>
-        <text class="feature-desc">鑺辩路璇楀彞路鎰忚薄</text>
+        <text class="feature-icon">🌸</text>
+        <text class="feature-name">按月导览</text>
+        <text class="feature-desc">花神·诗句·意象</text>
       </view>
       <view class="feature-card" @click="goPage('/pages/keyword/keyword')">
-        <text class="feature-icon">馃攳</text>
-        <text class="feature-name">鎰忚薄鍖归厤</text>
-        <text class="feature-desc">鍏抽敭璇嶆煡鑺卞崏</text>
+        <text class="feature-icon">🔍</text>
+        <text class="feature-name">意象匹配</text>
+        <text class="feature-desc">关键词查花卉</text>
       </view>
       <view class="feature-card" @click="goPage('/pages/dynasty/dynasty')">
-        <text class="feature-icon">馃搳</text>
-        <text class="feature-name">鏈濅唬缁熻</text>
-        <text class="feature-desc">鏃朵唬鏂囪剦鍒嗗竷</text>
+        <text class="feature-icon">📊</text>
+        <text class="feature-name">朝代统计</text>
+        <text class="feature-desc">时代文脉分布</text>
       </view>
       <view class="feature-card" @click="goPage('/pages/podcast/podcast')">
-        <text class="feature-icon">馃帣锔?/text>
-        <text class="feature-name">鑺辨湀鎾</text>
-        <text class="feature-desc">鐢熸垚璇楀鏂囨</text>
+        <text class="feature-icon">🎙️</text>
+        <text class="feature-name">花月播客</text>
+        <text class="feature-desc">生成诗境文案</text>
+      </view>
+      <view class="feature-card" @click="goPage('/pages/profile/profile')">
+        <text class="feature-icon">👤</text>
+        <text class="feature-name">个人中心</text>
+        <text class="feature-desc">登录注册与 AI 配置</text>
       </view>
     </view>
 
@@ -81,7 +86,7 @@
   </scroll-view>
 </template>
 
-<script setup lang="uts">
+<script setup lang="ts">
 import { FLOWERS, MONTH_COLORS, type FlowerItem } from '../../utils/flowerData'
 
 const flowers = ref<FlowerItem[]>(FLOWERS)
@@ -262,4 +267,3 @@ function goPage(path : string) {
   margin-top: 6rpx;
 }
 </style>
-

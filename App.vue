@@ -1,4 +1,4 @@
-﻿<script setup lang="uts">
+<script setup lang="ts">
 	// #ifdef APP-ANDROID || APP-HARMONY
 	let firstBackTime = 0
 	// #endif
@@ -17,7 +17,7 @@
 	onLastPageBackPress(() => {
 		if (firstBackTime == 0) {
 			uni.showToast({
-				title: '鍐嶆寜涓€娆￠€€鍑哄簲鐢?,
+				title: '再按一次退出应用',
 				position: 'bottom',
 			})
 			firstBackTime = Date.now()
