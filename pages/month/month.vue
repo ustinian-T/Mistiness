@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <scroll-view class="page-bg" scroll-y>
 
     <!-- Month Selector -->
@@ -16,7 +16,7 @@
             <text
               class="month-tab-text"
               :style="selectedMonth === item.month ? 'color:#fff' : 'color:#64748b'"
-            >{{ item.month }}月</text>
+            >{{ item.month }}鏈?/text>
           </view>
         </view>
       </scroll-view>
@@ -42,27 +42,27 @@
       <!-- Meta Row -->
       <view class="meta-row">
         <view class="meta-item">
-          <text class="meta-label">花神人物</text>
+          <text class="meta-label">鑺辩浜虹墿</text>
           <text class="meta-value">{{ current!.godName }}</text>
         </view>
         <view class="meta-divider"></view>
         <view class="meta-item">
-          <text class="meta-label">所属朝代</text>
+          <text class="meta-label">鎵€灞炴湞浠?/text>
           <text class="meta-value">{{ current!.dynasty }}</text>
         </view>
       </view>
 
       <!-- Poem -->
       <view class="section-block">
-        <text class="block-label">经典诗句</text>
+        <text class="block-label">缁忓吀璇楀彞</text>
         <view class="poem-box" :style="'border-left: 4rpx solid ' + monthColor(selectedMonth)">
-          <text class="poem-text">「{{ current!.poem }}」</text>
+          <text class="poem-text">銆寋{ current!.poem }}銆?/text>
         </view>
       </view>
 
       <!-- Keywords -->
       <view class="section-block">
-        <text class="block-label">文化意象关键词</text>
+        <text class="block-label">鏂囧寲鎰忚薄鍏抽敭璇?/text>
         <view class="kw-row">
           <view
             v-for="kw in current!.keywords"
@@ -77,29 +77,29 @@
 
       <!-- Culture Image -->
       <view class="section-block">
-        <text class="block-label">文化意象</text>
+        <text class="block-label">鏂囧寲鎰忚薄</text>
         <text class="block-body">{{ current!.cultureImage }}</text>
       </view>
 
       <!-- Dynasty Style -->
       <view class="section-block">
-        <text class="block-label">朝代诗词风格</text>
+        <text class="block-label">鏈濅唬璇楄瘝椋庢牸</text>
         <text class="block-body">{{ current!.dynastyStyle }}</text>
       </view>
 
       <!-- AI Script -->
       <view class="section-block">
-        <text class="block-label">花神讲解</text>
+        <text class="block-label">鑺辩璁茶В</text>
         <text class="block-body ai-text">{{ current!.aiScript }}</text>
       </view>
 
       <!-- Action Buttons -->
       <view class="action-row">
         <view class="btn-primary" @click="goPodcast">
-          <text class="btn-primary-text">生成播客文案</text>
+          <text class="btn-primary-text">鐢熸垚鎾鏂囨</text>
         </view>
         <view class="btn-ghost" @click="copyAiScript">
-          <text class="btn-ghost-text">复制讲解</text>
+          <text class="btn-ghost-text">澶嶅埗璁茶В</text>
         </view>
       </view>
 
@@ -110,7 +110,7 @@
 </template>
 
 <script setup lang="uts">
-import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData.uts'
+import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
 
 const flowers = ref<FlowerItem[]>(FLOWERS)
 const selectedMonth = ref<number>(1)
@@ -141,7 +141,7 @@ function copyAiScript() {
   uni.setClipboardData({
     data: current.value!.aiScript,
     success: () => {
-      uni.showToast({ title: '已复制讲解内容', icon: 'success' })
+      uni.showToast({ title: '宸插鍒惰瑙ｅ唴瀹?, icon: 'success' })
     }
   })
 }
@@ -373,3 +373,4 @@ onLoad((options ?: AnyObject) => {
   font-weight: 600;
 }
 </style>
+

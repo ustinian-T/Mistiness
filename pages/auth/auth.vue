@@ -1,12 +1,12 @@
-<template>
+﻿<template>
   <scroll-view class="page-bg" scroll-y>
     <view class="auth-wrap">
 
       <!-- Logo / Title -->
       <view class="brand">
-        <text class="brand-icon">🌸</text>
-        <text class="brand-title">花月诗境</text>
-        <text class="brand-sub">月令花神，一境入诗</text>
+        <text class="brand-icon">馃尭</text>
+        <text class="brand-title">鑺辨湀璇楀</text>
+        <text class="brand-sub">鏈堜护鑺辩锛屼竴澧冨叆璇?/text>
       </view>
 
       <!-- Tab Switch -->
@@ -16,14 +16,14 @@
           :class="mode === 'login' ? 'tab-active' : ''"
           @click="mode = 'login'; clearErrors()"
         >
-          <text class="tab-text" :style="mode === 'login' ? 'color:#2563eb' : 'color:#94a3b8'">登录</text>
+          <text class="tab-text" :style="mode === 'login' ? 'color:#2563eb' : 'color:#94a3b8'">鐧诲綍</text>
         </view>
         <view
           class="tab-item"
           :class="mode === 'register' ? 'tab-active' : ''"
           @click="mode = 'register'; clearErrors()"
         >
-          <text class="tab-text" :style="mode === 'register' ? 'color:#2563eb' : 'color:#94a3b8'">注册</text>
+          <text class="tab-text" :style="mode === 'register' ? 'color:#2563eb' : 'color:#94a3b8'">娉ㄥ唽</text>
         </view>
       </view>
 
@@ -32,11 +32,11 @@
 
         <!-- Username -->
         <view class="field-wrap">
-          <text class="field-label">用户名</text>
+          <text class="field-label">鐢ㄦ埛鍚?/text>
           <input
             class="field-input"
             v-model="username"
-            placeholder="3-20位字母/数字/汉字"
+            placeholder="3-20浣嶅瓧姣?鏁板瓧/姹夊瓧"
             placeholder-style="color:#94a3b8"
             maxlength="20"
           />
@@ -44,18 +44,18 @@
 
         <!-- Password -->
         <view class="field-wrap">
-          <text class="field-label">密码</text>
+          <text class="field-label">瀵嗙爜</text>
           <view class="pwd-row">
             <input
               class="field-input pwd-input"
               v-model="password"
               :password="!showPwd"
-              placeholder="不少于6位"
+              placeholder="涓嶅皯浜?浣?
               placeholder-style="color:#94a3b8"
               maxlength="64"
             />
             <view class="eye-btn" @click="showPwd = !showPwd">
-              <text class="eye-text">{{ showPwd ? '隐藏' : '显示' }}</text>
+              <text class="eye-text">{{ showPwd ? '闅愯棌' : '鏄剧ず' }}</text>
             </view>
           </view>
         </view>
@@ -63,13 +63,13 @@
         <!-- Invite Code (register only) -->
         <view v-if="mode === 'register'" class="field-wrap">
           <view class="field-label-row">
-            <text class="field-label">邀请码</text>
-            <text class="field-hint">填写后直接使用系统 AI，不填则需自备 API Key</text>
+            <text class="field-label">閭€璇风爜</text>
+            <text class="field-hint">濉啓鍚庣洿鎺ヤ娇鐢ㄧ郴缁?AI锛屼笉濉垯闇€鑷 API Key</text>
           </view>
           <input
             class="field-input"
             v-model="inviteCode"
-            placeholder="输入邀请码（可选）"
+            placeholder="杈撳叆閭€璇风爜锛堝彲閫夛級"
             placeholder-style="color:#94a3b8"
             maxlength="32"
           />
@@ -86,22 +86,22 @@
           :style="loading ? 'background:#94a3b8' : 'background:#2563eb'"
           @click="submit"
         >
-          <text class="submit-text">{{ loading ? '请稍候…' : (mode === 'login' ? '登录' : '注册') }}</text>
+          <text class="submit-text">{{ loading ? '璇风◢鍊欌€? : (mode === 'login' ? '鐧诲綍' : '娉ㄥ唽') }}</text>
         </view>
 
         <!-- Guest mode tip -->
         <view class="guest-tip" @click="continueAsGuest">
-          <text class="guest-tip-text">暂不登录，自备 API Key 使用 →</text>
+          <text class="guest-tip-text">鏆備笉鐧诲綍锛岃嚜澶?API Key 浣跨敤 鈫?/text>
         </view>
 
       </view>
 
       <!-- Register notes -->
       <view v-if="mode === 'register'" class="notes-card">
-        <text class="notes-title">关于注册</text>
-        <text class="notes-item">• 有邀请码：注册后即可直接使用系统 AI 功能</text>
-        <text class="notes-item">• 无邀请码：注册后需在「个人」页填写自己的 OpenAI API Key</text>
-        <text class="notes-item">• 也可不注册，直接在「个人」页填写 API Key 使用</text>
+        <text class="notes-title">鍏充簬娉ㄥ唽</text>
+        <text class="notes-item">鈥?鏈夐個璇风爜锛氭敞鍐屽悗鍗冲彲鐩存帴浣跨敤绯荤粺 AI 鍔熻兘</text>
+        <text class="notes-item">鈥?鏃犻個璇风爜锛氭敞鍐屽悗闇€鍦ㄣ€屼釜浜恒€嶉〉濉啓鑷繁鐨?OpenAI API Key</text>
+        <text class="notes-item">鈥?涔熷彲涓嶆敞鍐岋紝鐩存帴鍦ㄣ€屼釜浜恒€嶉〉濉啓 API Key 浣跨敤</text>
       </view>
 
     </view>
@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="uts">
-import { saveAuth, getToken, callUserAuth, type UserInfo } from '../../utils/auth.uts'
+import { saveAuth, getToken, callUserAuth, type UserInfo } from '../../utils/auth'
 
 const mode = ref<string>('login')
 const username = ref<string>('')
@@ -125,11 +125,11 @@ function clearErrors() {
 
 function validateForm() : boolean {
   if (username.value.trim() === '') {
-    errorMsg.value = '请填写用户名'
+    errorMsg.value = '璇峰～鍐欑敤鎴峰悕'
     return false
   }
   if (password.value.length < 6) {
-    errorMsg.value = '密码不能少于6位'
+    errorMsg.value = '瀵嗙爜涓嶈兘灏戜簬6浣?
     return false
   }
   return true
@@ -154,7 +154,7 @@ async function submit() {
     const res = await callUserAuth(params)
 
     if (res.code !== 0) {
-      errorMsg.value = res.message || '操作失败，请重试'
+      errorMsg.value = res.message || '鎿嶄綔澶辫触锛岃閲嶈瘯'
       return
     }
 
@@ -169,7 +169,7 @@ async function submit() {
     }
     saveAuth(res.token as string, userInfo)
 
-    uni.showToast({ title: mode.value === 'login' ? '登录成功' : '注册成功', icon: 'success' })
+    uni.showToast({ title: mode.value === 'login' ? '鐧诲綍鎴愬姛' : '娉ㄥ唽鎴愬姛', icon: 'success' })
 
     setTimeout(() => {
       // If came from another page, go back; else go to index
@@ -181,7 +181,7 @@ async function submit() {
       }
     }, 800)
   } catch (e : any) {
-    errorMsg.value = '网络异常，请检查连接后重试'
+    errorMsg.value = '缃戠粶寮傚父锛岃妫€鏌ヨ繛鎺ュ悗閲嶈瘯'
   } finally {
     loading.value = false
   }
@@ -382,3 +382,4 @@ onLoad(() => {
   line-height: 1.8;
 }
 </style>
+

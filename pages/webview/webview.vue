@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <web-view :src="url"></web-view>
 </template>
 
@@ -10,3 +10,4 @@ onLoad((options ?: AnyObject) => {
   url.value = urlParam ? decodeURIComponent(urlParam) : 'https://beian.miit.gov.cn'
 })
 </script>
+

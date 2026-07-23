@@ -1,4 +1,4 @@
-import App from './App.uvue'
+import App from './App.vue'
 
 import { createSSRApp } from 'vue'
 export function createApp() {

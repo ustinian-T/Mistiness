@@ -1,10 +1,10 @@
-<template>
+﻿<template>
   <view class="footer">
     <view class="footer-links">
-      <text class="footer-link" @click="openICP">湘ICP备2026021754号-2</text>
+      <text class="footer-link" @click="openICP">婀業CP澶?026021754鍙?2</text>
     </view>
-    <text class="footer-text">作者：谭书宏，刘思冉</text>
-    <text class="footer-text copyright">© 2026 花月诗境 · Mistiness</text>
+    <text class="footer-text">浣滆€咃細璋功瀹忥紝鍒樻€濆唹</text>
+    <text class="footer-text copyright">漏 2026 鑺辨湀璇楀 路 Mistiness</text>
   </view>
 </template>
 
@@ -48,3 +48,4 @@ function openICP() {
   color: #cbd5e1;
 }
 </style>
+
