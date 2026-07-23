@@ -14,6 +14,16 @@ __pycache__/
 uniCloud-alipay/cloudfunctions/**/.env
 uniCloud-alipay/cloudfunctions/**/node_modules/
 
+# SSL 证书（敏感文件，不要提交）
+tshai.top/
+*.pem
+*.key
+*.crt
+*.pfx
+*.jks
+*.der
+*.p7b
+
 # Python 后端（已迁移到 uniCloud，可选保留）
 backend/
 十二花神图片/
