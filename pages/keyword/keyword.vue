@@ -87,6 +87,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ALL_KEYWORDS, MONTH_COLORS, recommendByKeyword, type FlowerItem } from '../../utils/flowerData'
 
 const allKeywords = ref<string[]>(ALL_KEYWORDS)
@@ -120,6 +121,8 @@ function goDetail(month : number) {
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }

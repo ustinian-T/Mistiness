@@ -110,6 +110,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
 
 const flowers = ref<FlowerItem[]>(FLOWERS)
@@ -131,30 +133,43 @@ function selectMonth(month : number) {
 }
 
 function goPodcast() {
-  uni.navigateTo({
-    url: `/pages/podcast/podcast?month=${selectedMonth.value}`
-  })
+  uni.setStorageSync('podcast_month', selectedMonth.value)
+  uni.switchTab({ url: '/pages/podcast/podcast' })
 }
 
 function copyAiScript() {
   if (current.value == null) return
   uni.setClipboardData({
-    data: current.value!.aiScript,
+    data: current.value.aiScript,
     success: () => {
       uni.showToast({ title: '已复制讲解内容', icon: 'success' })
     }
   })
 }
 
-onLoad((options ?: AnyObject) => {
-  const m = parseInt((options?.['month'] as string) ?? '1')
-  selectedMonth.value = (m >= 1 && m <= 12) ? m : 1
+function loadSelectedMonth(monthValue : number) {
+  selectedMonth.value = (monthValue >= 1 && monthValue <= 12) ? monthValue : 1
   current.value = getFlowerByMonth(selectedMonth.value)
+}
+
+onLoad((options: any = {}) => {
+  const stored = Number(uni.getStorageSync('selected_month') || 0)
+  const fromOptions = parseInt((options?.['month'] as string) ?? '0')
+  loadSelectedMonth(fromOptions || stored || 1)
+})
+
+onShow(() => {
+  const stored = Number(uni.getStorageSync('selected_month') || 0)
+  if (stored >= 1 && stored <= 12 && stored !== selectedMonth.value) {
+    loadSelectedMonth(stored)
+  }
 })
 </script>
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }

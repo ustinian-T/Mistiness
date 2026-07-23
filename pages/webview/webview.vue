@@ -3,9 +3,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 const url = ref<string>('')
 
-onLoad((options ?: AnyObject) => {
+onLoad((options: any = {}) => {
   const urlParam = options?.['url'] as string
   url.value = urlParam ? decodeURIComponent(urlParam) : 'https://beian.miit.gov.cn'
 })

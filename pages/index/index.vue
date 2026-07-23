@@ -87,6 +87,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { FLOWERS, MONTH_COLORS, type FlowerItem } from '../../utils/flowerData'
 
 const flowers = ref<FlowerItem[]>(FLOWERS)
@@ -96,18 +97,24 @@ function monthColor(month : number) : string {
 }
 
 function goMonth(month : number) {
-  uni.navigateTo({
-    url: `/pages/month/month?month=${month}`
-  })
+  uni.setStorageSync('selected_month', month)
+  uni.switchTab({ url: '/pages/month/month' })
 }
 
 function goPage(path : string) {
-  uni.navigateTo({ url: path })
+  const tabPages = ['/pages/month/month', '/pages/keyword/keyword', '/pages/dynasty/dynasty', '/pages/podcast/podcast']
+  if (tabPages.includes(path)) {
+    uni.switchTab({ url: path })
+  } else {
+    uni.navigateTo({ url: path })
+  }
 }
 </script>
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }

@@ -109,6 +109,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { saveAuth, getToken, callUserAuth, type UserInfo } from '../../utils/auth'
 
 const mode = ref<string>('login')
@@ -200,6 +202,8 @@ onLoad(() => {
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }

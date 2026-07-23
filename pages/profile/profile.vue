@@ -185,6 +185,8 @@
 </template>
 
 <script setup lang="ts">
+import { onLoad, onShow } from '@dcloudio/uni-app'
+import { ref, computed } from 'vue'
 import {
   isLoggedIn, getLocalUserInfo, clearAuth, getToken,
   callUserAuth, callAiProxy, callInviteCode, saveAuth, type UserInfo
@@ -405,7 +407,10 @@ onShow(() => {
 </script>
 
 <style>
-.page-bg { flex: 1; background-color: #eef6fd; }
+.page-bg {
+  min-height: 100vh;
+  height: 100vh;
+  flex: 1; background-color: #eef6fd; }
 .page-wrap { padding: 28rpx 28rpx 0; gap: 20rpx; }
 .user-header { background-color: #2563eb; border-radius: 24rpx; padding: 32rpx 28rpx; flex-direction: row; align-items: center; gap: 20rpx; }
 .avatar { width: 88rpx; height: 88rpx; border-radius: 44rpx; align-items: center; justify-content: center; flex-shrink: 0; }

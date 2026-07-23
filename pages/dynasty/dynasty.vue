@@ -87,6 +87,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import { FLOWERS, MONTH_COLORS, type FlowerItem } from '../../utils/flowerData'
 
 type DynastyGroup = {
@@ -156,6 +157,8 @@ onMounted(() => {
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }

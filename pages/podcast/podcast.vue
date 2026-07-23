@@ -110,6 +110,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { FLOWERS, MONTH_COLORS, getFlowerByMonth, type FlowerItem } from '../../utils/flowerData'
 import { getToken, isLoggedIn, callAiProxy } from '../../utils/auth'
 
@@ -255,15 +257,28 @@ function goProfile() {
   uni.navigateTo({ url: '/pages/profile/profile' })
 }
 
-onLoad((options ?: AnyObject) => {
-  const m = parseInt((options?.['month'] as string) ?? '1')
+onLoad((options: any = {}) => {
+  const stored = Number(uni.getStorageSync('podcast_month') || 0)
+  const m = parseInt((options?.['month'] as string) ?? '0') || stored || 1
   selectedMonth.value = (m >= 1 && m <= 12) ? m : 1
   current.value = getFlowerByMonth(selectedMonth.value)
+})
+
+onShow(() => {
+  const stored = Number(uni.getStorageSync('podcast_month') || 0)
+  if (stored >= 1 && stored <= 12 && stored !== selectedMonth.value) {
+    selectedMonth.value = stored
+    current.value = getFlowerByMonth(stored)
+    podcastText.value = ''
+    paragraphs.value = []
+  }
 })
 </script>
 
 <style>
 .page-bg {
+  min-height: 100vh;
+  height: 100vh;
   flex: 1;
   background-color: #eef6fd;
 }
