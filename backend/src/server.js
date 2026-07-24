@@ -186,7 +186,9 @@ app.get("/api/keywords", (_req, res) => {
 });
 
 app.get("/api/recommend", async (req, res) => {
-  const keyword = (req.query.keyword || "").trim();
+  let keyword = req.query.keyword || "";
+  if (typeof keyword !== "string") keyword = "";
+  keyword = decodeURIComponent(keyword).trim();
   if (!keyword) return res.status(400).json({ error: "缺少关键词" });
 
   let results = localKeywordMatch(keyword);

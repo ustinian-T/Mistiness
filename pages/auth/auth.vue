@@ -1,36 +1,32 @@
 <template>
-  <scroll-view class="page-bg" scroll-y>
-    <view class="auth-wrap">
+  <scroll-view class="page-shell" scroll-y>
+    <view class="site-container">
 
-      <!-- Logo / Title -->
       <view class="brand">
         <text class="brand-icon">🌸</text>
         <text class="brand-title">花月诗境</text>
         <text class="brand-sub">月令花神，一境入诗</text>
       </view>
 
-      <!-- Tab Switch -->
       <view class="tab-row">
         <view
           class="tab-item"
           :class="mode === 'login' ? 'tab-active' : ''"
           @click="mode = 'login'; clearErrors()"
         >
-          <text class="tab-text" :style="mode === 'login' ? 'color:#2563eb' : 'color:#94a3b8'">登录</text>
+          <text class="tab-text">登录</text>
         </view>
         <view
           class="tab-item"
           :class="mode === 'register' ? 'tab-active' : ''"
           @click="mode = 'register'; clearErrors()"
         >
-          <text class="tab-text" :style="mode === 'register' ? 'color:#2563eb' : 'color:#94a3b8'">注册</text>
+          <text class="tab-text">注册</text>
         </view>
       </view>
 
-      <!-- Form Card -->
-      <view class="form-card">
+      <view class="form-card glass">
 
-        <!-- Username -->
         <view class="field-wrap">
           <text class="field-label">用户名</text>
           <input
@@ -42,12 +38,11 @@
           />
         </view>
 
-        <!-- Password -->
         <view class="field-wrap">
           <text class="field-label">密码</text>
           <view class="pwd-row">
             <input
-              class="field-input pwd-input"
+              class="field-input"
               v-model="password"
               :password="!showPwd"
               placeholder="不少于6位"
@@ -60,7 +55,6 @@
           </view>
         </view>
 
-        <!-- Invite Code (register only) -->
         <view v-if="mode === 'register'" class="field-wrap">
           <view class="field-label-row">
             <text class="field-label">邀请码</text>
@@ -75,32 +69,28 @@
           />
         </view>
 
-        <!-- Error message -->
         <view v-if="errorMsg !== ''" class="error-box">
           <text class="error-text">{{ errorMsg }}</text>
         </view>
 
-        <!-- Submit Button -->
         <view
           class="submit-btn"
-          :style="loading ? 'background:#94a3b8' : 'background:#2563eb'"
+          :class="loading ? 'submit-disabled' : ''"
           @click="submit"
         >
           <text class="submit-text">{{ loading ? '请稍候…' : (mode === 'login' ? '登录' : '注册') }}</text>
         </view>
 
-        <!-- Guest mode tip -->
         <view class="guest-tip" @click="continueAsGuest">
           <text class="guest-tip-text">暂不登录，自备 API Key 使用 →</text>
         </view>
 
       </view>
 
-      <!-- Register notes -->
-      <view v-if="mode === 'register'" class="notes-card">
+      <view v-if="mode === 'register'" class="notes-card glass">
         <text class="notes-title">关于注册</text>
         <text class="notes-item">• 有邀请码：注册后即可直接使用系统 AI 功能</text>
-        <text class="notes-item">• 无邀请码：注册后需在「个人」页填写自己的 OpenAI API Key</text>
+        <text class="notes-item">• 无邀请码：注册后需在「个人」页填写自己的 API Key</text>
         <text class="notes-item">• 也可不注册，直接在「个人」页填写 API Key 使用</text>
       </view>
 
@@ -176,7 +166,6 @@ async function submit() {
     uni.showToast({ title: mode.value === 'login' ? '登录成功' : '注册成功', icon: 'success' })
 
     setTimeout(() => {
-      // If came from another page, go back; else go to index
       const pages = getCurrentPages()
       if (pages.length > 1) {
         uni.navigateBack()
@@ -203,188 +192,52 @@ onLoad(() => {
 </script>
 
 <style>
-.page-bg {
-  min-height: 100vh;
-  height: 100vh;
-  flex: 1;
-  background-color: #eef6fd;
-}
+@import '../../common/theme.css';
 
-.auth-wrap {
-  padding: 60rpx 40rpx 80rpx;
-  gap: 28rpx;
-}
+.page-shell { height: 100vh; background: var(--paper); position: relative; }
+.site-container { width: calc(100% - 40px); max-width: 560px; margin: 0 auto; padding: 52px 0 64px; position: relative; z-index: 1; }
 
-.brand {
-  align-items: center;
-  gap: 10rpx;
-  margin-bottom: 8rpx;
-}
+.brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 32px; }
+.brand-icon { font-size: 70px; }
+.brand-title { font: 42px 'STKaiti', 'KaiTi', serif; color: #183f34; letter-spacing: 4px; }
+.brand-sub { font-size: 14px; color: #71857e; }
 
-.brand-icon {
-  font-size: 80rpx;
-}
+.tab-row { display: flex; flex-direction: row; background: #e7efeb; border-radius: 18px; padding: 4px; gap: 0; }
+.tab-item { flex: 1; padding: 14px; display: flex; align-items: center; justify-content: center; border-radius: 14px; }
+.tab-active { background: #fff; box-shadow: 0 6px 18px rgba(35,71,60,.08); }
+.tab-text { font-size: 15px; font-weight: 600; color: #527269; }
+.tab-active .tab-text { color: #183f34; }
 
-.brand-title {
-  font-size: 52rpx;
-  font-weight: 700;
-  color: #1e3a5f;
-  letter-spacing: 6rpx;
-  margin-top: 10rpx;
-}
+.form-card { margin-top: 28px; border-radius: 24px; padding: 34px; gap: 22px; }
 
-.brand-sub {
-  font-size: 26rpx;
-  color: #64748b;
-}
+.field-wrap { gap: 8px; }
+.field-label-row { flex-direction: row; align-items: center; gap: 10px; }
+.field-label { font-size: 13px; font-weight: 600; color: #526b63; }
+.field-hint { font-size: 11px; color: #859992; flex: 1; }
 
-.tab-row {
-  flex-direction: row;
-  background-color: #f1f5f9;
-  border-radius: 20rpx;
-  padding: 6rpx;
-  gap: 0;
-}
+.field-input { flex: 1; background: #f7faf8; border-radius: 12px; padding: 16px; font-size: 15px; color: #183f34; border: 1px solid #d7e3de; }
 
-.tab-item {
-  flex: 1;
-  padding: 18rpx;
-  align-items: center;
-  border-radius: 16rpx;
-}
+.pwd-row { flex-direction: row; align-items: center; gap: 10px; }
+.eye-btn { background: #f1f5f9; border-radius: 10px; padding: 14px; align-items: center; justify-content: center; }
+.eye-text { font-size: 12px; color: #6a837a; }
 
-.tab-active {
-  background-color: #ffffff;
-  box-shadow: 0 2rpx 8rpx rgba(37,99,235,0.10);
-}
+.error-box { background: #fef2f2; border-radius: 12px; padding: 14px 18px; border: 1px solid #fecaca; }
+.error-text { font-size: 13px; color: #dc2626; }
 
-.tab-text {
-  font-size: 28rpx;
-  font-weight: 600;
-}
+.submit-btn { background: #183f34; border-radius: 14px; padding: 20px; align-items: center; margin-top: 8px; }
+.submit-disabled { opacity: .5; }
+.submit-text { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 2px; }
 
-.form-card {
-  background-color: #ffffff;
-  border-radius: 24rpx;
-  padding: 36rpx 32rpx;
-  gap: 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(37,99,235,0.08);
-}
+.guest-tip { align-items: center; padding: 12px; }
+.guest-tip-text { font-size: 14px; color: #426b5f; }
 
-.field-wrap {
-  gap: 10rpx;
-}
+.notes-card { margin-top: 22px; background: #f7faf8; border-radius: 18px; padding: 22px 26px; gap: 8px; border: 1px solid #e5ede9; }
+.notes-title { font-size: 13px; font-weight: 600; color: #315e51; margin-bottom: 4px; }
+.notes-item { font-size: 12px; color: #647971; line-height: 1.8; }
 
-.field-label-row {
-  flex-direction: row;
-  align-items: center;
-  gap: 12rpx;
+@media (max-width: 600px) {
+  .site-container { width: calc(100% - 28px); padding-top: 34px; }
+  .brand-title { font-size: 36px; }
+  .form-card { padding: 26px; }
 }
-
-.field-label {
-  font-size: 24rpx;
-  font-weight: 600;
-  color: #475569;
-}
-
-.field-hint {
-  font-size: 20rpx;
-  color: #94a3b8;
-  flex: 1;
-}
-
-.field-input {
-  background-color: #f8fafc;
-  border-radius: 14rpx;
-  padding: 24rpx 20rpx;
-  font-size: 28rpx;
-  color: #1e3a5f;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #e2e8f0;
-}
-
-.pwd-row {
-  flex-direction: row;
-  align-items: center;
-  gap: 12rpx;
-}
-
-.pwd-input {
-  flex: 1;
-}
-
-.eye-btn {
-  background-color: #f1f5f9;
-  border-radius: 12rpx;
-  padding: 20rpx 20rpx;
-  align-items: center;
-  justify-content: center;
-}
-
-.eye-text {
-  font-size: 22rpx;
-  color: #64748b;
-}
-
-.error-box {
-  background-color: #fef2f2;
-  border-radius: 12rpx;
-  padding: 16rpx 20rpx;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #fecaca;
-}
-
-.error-text {
-  font-size: 24rpx;
-  color: #dc2626;
-}
-
-.submit-btn {
-  border-radius: 18rpx;
-  padding: 32rpx;
-  align-items: center;
-  margin-top: 4rpx;
-}
-
-.submit-text {
-  font-size: 30rpx;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 2rpx;
-}
-
-.guest-tip {
-  align-items: center;
-  padding: 8rpx;
-}
-
-.guest-tip-text {
-  font-size: 24rpx;
-  color: #2563eb;
-}
-
-.notes-card {
-  background-color: #f0f9ff;
-  border-radius: 18rpx;
-  padding: 24rpx 28rpx;
-  gap: 10rpx;
-  border-width: 1rpx;
-  border-style: solid;
-  border-color: #bae6fd;
-}
-
-.notes-title {
-  font-size: 24rpx;
-  font-weight: 600;
-  color: #0369a1;
-  margin-bottom: 4rpx;
-}
-
-.notes-item {
-  font-size: 22rpx;
-  color: #0c4a6e;
-  line-height: 1.8;
-}
-.page-bg{background:#f3f7f5}.auth-wrap{width:calc(100% - 40px);max-width:560px;margin:0 auto;padding:52px 0 64px}.brand-icon{display:none}.brand-title{color:#183f34;font-family:'STKaiti','KaiTi',serif;font-weight:500}.brand-sub{color:#71857e}.tab-row{background:#e7efeb}.tab-active{box-shadow:0 6px 18px rgba(35,71,60,.08)}.tab-text{color:#527269!important}.tab-active .tab-text{color:#183f34!important}.form-card,.notes-card{border:1px solid #fff;box-shadow:0 20px 55px rgba(35,71,60,.08)}.field-input{background:#f7faf8;border-color:#d7e3de;color:#183f34}.submit-btn{background:#183f34!important}.guest-link-text{color:#426b5f}.site-footer{width:100%}@media(max-width:600px){.auth-wrap{width:calc(100% - 28px);padding-top:34px}.brand-title{font-size:46rpx}}</style>
+</style>

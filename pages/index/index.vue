@@ -18,6 +18,7 @@
         </view>
         <view class="hero-gallery" @click="goMonth(featured.month)">
           <image class="hero-image" :src="flowerImage(featured.month)" mode="aspectFill" />
+          <image class="hero-god-image" :src="godImage(featured.month)" mode="aspectFit" />
           <view class="hero-image-shade"></view>
           <view class="hero-image-meta">
             <text class="hero-image-index">{{ String(featured.month).padStart(2, '0') }}</text>
@@ -63,7 +64,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AppFooter from '../../components/app-footer.vue'
-import { FLOWERS, ALL_KEYWORDS, getFlowerImage, type FlowerItem } from '../../utils/flowerData'
+import { FLOWERS, ALL_KEYWORDS, getFlowerImage, getGodImage, type FlowerItem } from '../../utils/flowerData'
 const flowers = ref<FlowerItem[]>(FLOWERS)
 const keywordCount = ALL_KEYWORDS.length
 const dynastyCount = new Set(FLOWERS.map(item => item.dynasty)).size
@@ -76,6 +77,7 @@ const features = [
   { no:'05',title:'个人中心',desc:'管理登录状态、AI 服务配置与个人创作体验。',path:'/pages/profile/profile' }
 ]
 function flowerImage(month:number){return getFlowerImage(month)}
+function godImage(month:number){return getGodImage(month)}
 function goMonth(month:number){uni.setStorageSync('selected_month',month);uni.switchTab({url:'/pages/month/month'})}
 function goPage(path:string){const tabs=['/pages/month/month','/pages/keyword/keyword','/pages/dynasty/dynasty','/pages/podcast/podcast'];tabs.includes(path)?uni.switchTab({url:path}):uni.navigateTo({url:path})}
 </script>

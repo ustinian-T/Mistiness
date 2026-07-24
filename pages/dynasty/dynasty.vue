@@ -31,13 +31,23 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import AppFooter from '../../components/app-footer.vue'
-import { FLOWERS,getFlowerImage,type FlowerItem } from '../../utils/flowerData'
+import { getFlowerImage, type FlowerItem } from '../../utils/flowerData'
+import { getDynastyStats } from '../../utils/api'
 type DynastyGroup={dynasty:string;count:number;flowers:FlowerItem[]}
 const palette=['#587e72','#a57462','#879d73','#756f94','#b18b55','#557c8e','#9c6975','#476b62']
 const dynastyList=ref<DynastyGroup[]>([])
-const grouped=new Map<string,FlowerItem[]>();FLOWERS.forEach(f=>{const list=grouped.get(f.dynasty)||[];list.push(f);grouped.set(f.dynasty,list)});dynastyList.value=Array.from(grouped.entries()).map(([dynasty,flowers])=>({dynasty,count:flowers.length,flowers})).sort((a,b)=>b.count-a.count)
 const maxCount=computed(()=>Math.max(...dynastyList.value.map(item=>item.count),1))
+async function loadStats(){
+  try{
+    const res=await getDynastyStats()
+    if(res&&res.length){
+      dynastyList.value=res.sort((a:any,b:any)=>b.count-a.count)
+    }
+  }catch{}
+}
+onLoad(()=>loadStats())
 function barWidth(count:number){return Math.max(8,Math.round(count/maxCount.value*100))}
 function barColor(index:number){return palette[index%palette.length]}
 function flowerImage(month:number){return getFlowerImage(month)}
@@ -45,6 +55,6 @@ function goDetail(month:number){uni.setStorageSync('selected_month',month);uni.s
 </script>
 <style>
 @import '../../common/theme.css';
-.dynasty-page{height:100vh;background:#f3f7f5}.dynasty-container{width:calc(100% - 48px);max-width:1120px;margin:0 auto;padding:32px 0}.dynasty-hero{border-radius:30px;padding:58px;display:grid;grid-template-columns:1fr auto;gap:50px;align-items:center}.dynasty-title{margin-top:12px;color:#183f34;font:50px 'STKaiti','KaiTi',serif;letter-spacing:4px}.dynasty-lead{margin-top:18px;max-width:680px;color:#6b8179;font-size:15px;line-height:1.9}.hero-stat{width:150px;height:150px;border:1px solid #cadbd4;border-radius:50%;align-items:center;justify-content:center}.hero-stat-number{font:46px Georgia,serif;color:#a87462}.hero-stat-label{margin-top:5px;color:#7c9189;font-size:12px}.chart-card{padding:38px;border-radius:24px;gap:22px}.bar-row{flex-direction:row;align-items:center;gap:18px}.bar-label{width:68px;text-align:right;color:#526e65;font-size:13px}.bar-track{flex:1;height:18px;border-radius:100px;background:#e7efeb;overflow:hidden}.bar-fill{height:100%;border-radius:100px}.bar-count{width:26px;color:#294f44;font:15px Georgia,serif}.dynasty-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.dynasty-card{border-radius:24px;overflow:hidden}.dynasty-card-head{padding:25px 28px;background:#e9f1ed;flex-direction:row;justify-content:space-between;align-items:center}.dynasty-name{font:27px 'STKaiti','KaiTi',serif;color:#234b40}.dynasty-count{margin-top:5px;color:#82968f;font-size:11px}.dynasty-mark{color:#cadbd4;font:44px 'STKaiti','KaiTi',serif}.flower-list{padding:8px 22px}.flower-row{padding:17px 4px;border-bottom:1px solid #e5ede9;flex-direction:row;align-items:center;gap:14px;cursor:pointer}.flower-row:last-child{border-bottom:0}.flower-thumb{width:70px;height:70px;border-radius:14px;flex-shrink:0}.flower-info{flex:1;min-width:0}.flower-name{font:20px 'STKaiti','KaiTi',serif;color:#21483d}.flower-meta{margin-top:3px;color:#8a9a95;font-size:10px}.flower-poem{margin-top:7px;color:#657b74;font:12px 'STKaiti','KaiTi',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.flower-arrow{color:#8ca097;font-size:15px}
+.dynasty-page{height:100vh;background:#f3f7f5}.dynasty-container{width:calc(100% - 48px);max-width:1120px;margin:0 auto;padding:32px 0}.dynasty-hero{border-radius:30px;padding:58px;display:grid;grid-template-columns:1fr auto;gap:50px;align-items:center}.dynasty-title{margin-top:12px;color:#183f34;font:50px 'STKaiti','KaiTi',serif;letter-spacing:4px}.dynasty-lead{margin-top:18px;max-width:680px;color:#6b8179;font-size:15px;line-height:1.9}.hero-stat{width:150px;height:150px;border:1px solid #cadbd4;border-radius:50%;align-items:center;justify-content:center}.hero-stat-number{font:46px Georgia,serif;color:#a87462}.hero-stat-label{margin-top:5px;color:#7c9189;font-size:12px}.chart-card{padding:38px;border-radius:24px;gap:22px}.bar-row{flex-direction:row;align-items:center;gap:18px}.bar-label{width:68px;text-align:right;color:#526e65;font-size:13px}.bar-track{flex:1;height:18px;border-radius:100px;background:#e7efeb;overflow:hidden}.bar-fill{height:100%;border-radius:100px}.bar-count{width:26px;color:#294f44;font:15px Georgia,serif}.dynasty-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.dynasty-card{border-radius:24px;overflow:hidden}.dynasty-card-head{padding:25px 28px;background:#e9f1ed;flex-direction:row;justify-content:space-between;align-items:center}.dynasty-name{font:27px 'STKaiti','KaiTi',serif;color:#234b40}.dynasty-count{margin-top:5px;color:#82968f;font-size:11px}.dynasty-mark{color:#cadbd4;font:44px 'STKaiti','KaiTi',serif}.flower-list{padding:8px 22px}.flower-row{padding:20px 4px;border-bottom:1px solid #e5ede9;flex-direction:row;align-items:center;gap:16px;cursor:pointer;transition:background .3s}.flower-row:last-child{border-bottom:0}.flower-row:active,.flower-row:hover{background:rgba(24,63,52,.03)}.flower-thumb{width:76px;height:76px;border-radius:16px;flex-shrink:0}.flower-info{flex:1;min-width:0}.flower-name{font:22px 'STKaiti','KaiTi',serif;color:#183f34}.flower-meta{margin-top:4px;color:#8a9a95;font-size:11px}.flower-poem{margin-top:8px;color:#5e786f;font:13px 'STKaiti','KaiTi',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.flower-arrow{color:#a87462;font-size:16px;transition:transform .3s}.flower-row:active .flower-arrow{transform:translateX(4px)}
 @media(max-width:760px){.dynasty-container{width:calc(100% - 28px);padding-top:14px}.dynasty-hero{padding:34px;grid-template-columns:1fr}.dynasty-title{font-size:40px}.hero-stat{display:none}.dynasty-grid{grid-template-columns:1fr}.chart-card{padding:28px 20px}}
 </style>
